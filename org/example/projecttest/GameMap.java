@@ -20,16 +20,17 @@ public class GameMap extends JFrame {
     private static final Color COLOR_TRAP = Color.RED;
     private static final Color COLOR_STARTER_HOUSE = Color.CYAN; // Color for the starter house
     private static final Color COLOR_TREASURE = Color.GREEN;
-    private static final String[] TREASURES = {
-            "Diamond Ring",
-            "Jewel-encrusted Sword",
-            "Golden Goblet",
-            "Crystal Goblets",
-            "Wooden Bow",
-            "Paladin’s Shield",
-            "Golden Key",
-            "Dragon’s Scroll"
+    private static final String[][] TREASURES = {
+            {"Diamond Ring", "1500"},
+            {"Jewel-encrusted Sword", "2000"},
+            {"Golden Goblet", "1000"},
+            {"Crystal Goblets", "2500"},
+            {"Wooden Bow", "800"},
+            {"Paladin’s Shield", "3000"},
+            {"Golden Key", "700"},
+            {"Dragon’s Scroll", "1200"}
     };
+
 
 
     private int[][] generalMap;
