@@ -34,7 +34,6 @@ public class GameMap extends JFrame {
 
 
     private int[][] generalMap;
-    private List<Player> players;
     private JLabel[][] labels;
     private JButton diceButton; // Button for rolling the dice
 
@@ -44,7 +43,7 @@ public class GameMap extends JFrame {
         setResizable(false);
 
         generalMap = generateMap();
-        players = createPlayers();
+        List<Player> players = createPlayers();
         labels = new JLabel[MAP_SIZE][MAP_SIZE]; // Adjust label array size to match the map size
 
         JPanel panel = new JPanel();
