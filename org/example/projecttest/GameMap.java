@@ -40,7 +40,7 @@ public class GameMap extends JFrame {
     public GameMap() {
         setTitle("Game Map");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+        setResizable(true);
 
         generalMap = generateMap();
         List<Player> players = createPlayers();
@@ -61,21 +61,21 @@ public class GameMap extends JFrame {
         }
 
         // Add the dice button
-        diceButton = new JButton("Roll Dice");
+        diceButton = new JButton("Roll dice");
         diceButton.addActionListener(new ActionListener() {
-            @Override
+            @Override                                    //override actionPerformed method in parent class to define our own behavior
             public void actionPerformed(ActionEvent e) {
                 rollDice();
             }
         });
 
         // Add components to the content pane
-        Container contentPane = getContentPane();
+        Container contentPane = getContentPane(); // allows access to window that allows base for UI elements to be placed on
         contentPane.setLayout(new BorderLayout());
-        contentPane.add(panel, BorderLayout.CENTER);
-        contentPane.add(diceButton, BorderLayout.SOUTH);
+        contentPane.add(panel, BorderLayout.CENTER); // panel where map is implemented
+        contentPane.add(diceButton, BorderLayout.SOUTH); //adds dice button
 
-        pack();
+        pack(); //formats window
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -83,7 +83,7 @@ public class GameMap extends JFrame {
     private void rollDice() {
         Random random = new Random();
         int diceValue = random.nextInt(6) + 1; // Generate a random value from 1 to 6
-        JOptionPane.showMessageDialog(this, "You rolled: " + diceValue);
+        JOptionPane.showMessageDialog(this, "You rolled: " + diceValue); // "This" references the dialogue box currently in use
     }
 
     private int[][] generateMap() {
@@ -91,7 +91,7 @@ public class GameMap extends JFrame {
 
         // Initialize borders
         for (int i = 0; i < MAP_SIZE; i++) {
-            map[0][i] = map[MAP_SIZE - 1][i] = map[i][0] = map[i][MAP_SIZE - 1] = 1;
+            map[0][i] = map[MAP_SIZE - 1][i] = map[i][0] = map[i][MAP_SIZE - 1] = 1; // assigning to 1 = enum for light grey?
         }
 
         // Place castle
@@ -221,7 +221,7 @@ public class GameMap extends JFrame {
         }
         return false;
     }
-    private boolean isAdjacentToCastle(int[][] map, int x, int y) {
+    private boolean isAdjacentToCastle(int[][] map, int x, int y) { //saying method is inverted, need to check implementations to confirm
         return (Math.abs(x - SIZE / 2) <= 1 && Math.abs(y - SIZE / 2) <= 1);
     }
 
@@ -241,7 +241,7 @@ public class GameMap extends JFrame {
 
 
     public static void main(String[] args) {
-        new GameMap();
+        new GameMap(); //lol
     }
 }
 
