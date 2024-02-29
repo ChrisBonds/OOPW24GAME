@@ -104,7 +104,7 @@ public class GameMap extends JFrame {
         while (treasureCount < 8) {
             int x = random.nextInt(MAP_SIZE);
             int y = random.nextInt(MAP_SIZE);
-            if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToTreasure(map, x, y)) {
+            if (map[x][y] == 0 && !isAdjacentToCastle(x, y) && !isAdjacentToTreasure(map, x, y)) {
                 map[x][y] = 3; // Treasure
                 treasureCount++;
             }
@@ -115,7 +115,7 @@ public class GameMap extends JFrame {
         while (marketCount < 5) {
             int x = random.nextInt(MAP_SIZE);
             int y = random.nextInt(MAP_SIZE);
-            if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToMarket(map, x, y)) {
+            if (map[x][y] == 0 && !isAdjacentToCastle(x, y) && !isAdjacentToMarket(map, x, y)) {
                 map[x][y] = 5; // Market
                 marketCount++;
             }
@@ -126,28 +126,28 @@ public class GameMap extends JFrame {
         while (lostItemCount < 6) {
             int x = random.nextInt(MAP_SIZE);
             int y = random.nextInt(MAP_SIZE);
-            if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToLostItem(map, x, y)) {
+            if (map[x][y] == 0 && !isAdjacentToCastle(x, y) && !isAdjacentToLostItem(map, x, y)) {
                 map[x][y] = 6; // Lost Item
                 lostItemCount++;
             }
         }
 
         // Place traps
-        int trapCount = random.nextInt(6) + 2; // Randomly choose trap count between 2 and 7
+        int trapCount = random.nextInt(4) + 2; // Randomly choose trap count between 2 and 7
         for (int i = 0; i < trapCount; i++) {
             int x = random.nextInt(MAP_SIZE);
             int y = random.nextInt(MAP_SIZE);
-            if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y)) {
+            if (map[x][y] == 0 && !isAdjacentToCastle(x, y)) {
                 map[x][y] = 7; // Trap
             }
         }
 
         // Place walls
-        int wallCount = random.nextInt(6) + 2; // Randomly choose wall count between 2 and 7
+        int wallCount = random.nextInt(4) + 2; // Randomly choose wall count between 2 and 7
         for (int i = 0; i < wallCount; i++) {
             int x = random.nextInt(MAP_SIZE);
             int y = random.nextInt(MAP_SIZE);
-            if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToWall(map, x, y)) {
+            if (map[x][y] == 0 && !isAdjacentToCastle(x, y) && !isAdjacentToWall(map, x, y)) {
                 map[x][y] = 4; // Wall
             }
         }
@@ -221,7 +221,7 @@ public class GameMap extends JFrame {
         }
         return false;
     }
-    private boolean isAdjacentToCastle(int[][] map, int x, int y) { //saying method is inverted, need to check implementations to confirm
+    private boolean isAdjacentToCastle(int x, int y) { //saying method is inverted, need to check implementations to confirm
         return (Math.abs(x - SIZE / 2) <= 1 && Math.abs(y - SIZE / 2) <= 1);
     }
 
