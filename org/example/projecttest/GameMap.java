@@ -1,5 +1,4 @@
 package org.example.projecttest;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,12 +14,23 @@ public class GameMap extends JFrame {
     private static final int CELL_SIZE = 50;
     private static final Color COLOR_BORDER = Color.LIGHT_GRAY;
     private static final Color COLOR_CASTLE = Color.YELLOW;
-    private static final Color COLOR_TREASURE = Color.GREEN;
     private static final Color COLOR_WALL = Color.BLACK;
     private static final Color COLOR_MARKET = Color.ORANGE;
     private static final Color COLOR_LOST_ITEM = Color.BLUE;
     private static final Color COLOR_TRAP = Color.RED;
     private static final Color COLOR_STARTER_HOUSE = Color.CYAN; // Color for the starter house
+    private static final Color COLOR_TREASURE = Color.GREEN;
+    private static final String[] TREASURES = {
+            "Diamond Ring",
+            "Jewel-encrusted Sword",
+            "Golden Goblet",
+            "Crystal Goblets",
+            "Wooden Bow",
+            "Paladin’s Shield",
+            "Golden Key",
+            "Dragon’s Scroll"
+    };
+
 
     private int[][] generalMap;
     private List<Player> players;
@@ -87,6 +97,7 @@ public class GameMap extends JFrame {
         // Place castle
         map[SIZE / 2][SIZE / 2] = 2;
 
+
         // Place treasures
         Random random = new Random();
         int treasureCount = 0;
@@ -140,7 +151,6 @@ public class GameMap extends JFrame {
                 map[x][y] = 4; // Wall
             }
         }
-
         // Fill remaining cells with white spaces
         for (int i = 0; i < MAP_SIZE; i++) {
             for (int j = 0; j < MAP_SIZE; j++) {
@@ -164,7 +174,6 @@ public class GameMap extends JFrame {
         }
         return players;
     }
-
     // Check if the given position is adjacent to any market
     private boolean isAdjacentToMarket(int[][] map, int x, int y) {
         for (int i = Math.max(0, x - 1); i <= Math.min(MAP_SIZE - 1, x + 1); i++) {
@@ -215,11 +224,12 @@ public class GameMap extends JFrame {
     private boolean isAdjacentToCastle(int[][] map, int x, int y) {
         return (Math.abs(x - SIZE / 2) <= 1 && Math.abs(y - SIZE / 2) <= 1);
     }
+
     private Color getColorForCell(int value) {
         switch (value) {
             case 1: return COLOR_BORDER;
             case 2: return COLOR_CASTLE;
-            case 3: return COLOR_TREASURE;
+            case 3: return COLOR_TREASURE; // Color for treasures
             case 4: return COLOR_WALL;
             case 5: return COLOR_MARKET;
             case 6: return COLOR_LOST_ITEM;
@@ -228,6 +238,7 @@ public class GameMap extends JFrame {
             default: return Color.WHITE;
         }
     }
+
 
     public static void main(String[] args) {
         new GameMap();
@@ -245,5 +256,5 @@ class Player {
         this.pawnY = startY;
     }
 
-// Getters and setters for player's name and pawn position
+    // Getters and setters for player's name and pawn position
 }
