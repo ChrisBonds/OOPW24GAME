@@ -37,14 +37,16 @@ public class GameMap extends JFrame {
     private List<Player> players;
     private JLabel[][] labels;
     private JButton diceButton; // Button for rolling the dice
+    private List<int[][]> playerMap;
 
     public GameMap() {
         setTitle("Game Map");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(true);
 
-        generalMap = generateMap();
+        //generalMap = generateMap();
         players = createPlayers();
+        initializeMaps();
         labels = new JLabel[MAP_SIZE][MAP_SIZE]; // Adjust label array size to match the map size
 
         JPanel panel = new JPanel();
@@ -165,6 +167,13 @@ public class GameMap extends JFrame {
         map[MAP_SIZE - 1][0] = 9; // Starter house
 
         return map;
+    }
+
+    private void initializeMaps() {
+        playerMaps = new ArrayList<>();
+        for (int i = 0; i < players.size(); i++) {
+            playerMaps.add(generateMap()); // Generate a separate map for each player
+        }
     }
 
     private List<Player> createPlayers() {
