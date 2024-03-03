@@ -37,7 +37,7 @@ public class GameMap extends JFrame {
     private List<Player> players;
     private JLabel[][] labels;
     private JButton diceButton; // Button for rolling the dice
-    private List<int[][]> playerMap;
+    private List<int[][]> playerMaps;
 
     public GameMap() {
         setTitle("Game Map");
