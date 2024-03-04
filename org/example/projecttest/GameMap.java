@@ -180,7 +180,7 @@ public class GameMap extends JFrame {
 
         // Place lost items
         int lostItemCount = 0;
-        while (lostItemCount < 6) {
+        while (lostItemCount < 13) {
             int x = random.nextInt(MAP_SIZE);
             int y = random.nextInt(MAP_SIZE);
             if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToLostItem(map, x, y)) {
