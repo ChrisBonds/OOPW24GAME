@@ -260,13 +260,22 @@ public class GameMap extends JFrame {
 
 
     private List<Player> createPlayers() {
-        List<Player> players = new ArrayList<>();
+
+        // Assuming currentPlayer is the current player index
+       // Player currentPlayer = players.get(currentPlayer);
+       // currentPlayer.getWallet().addMoney(100); // Add 100 money to the current player's wallet
+        // Assuming currentPlayer is the current player index
+       // Player currentPlayer = players.get(currentPlayer);
+       // currentPlayer.getWallet().deductMoney(50); // Deduct 50 money from the current player's wallet
+
+
         ImageIcon playerOneIcon = createPlayerIcon(Color.MAGENTA, 20, 20);
         ImageIcon playerTwoIcon = createPlayerIcon(Color.PINK, 20, 20);
-        players.add(new Player("Player 1", MAP_SIZE - 2, 0,playerOneIcon));
-        players.add(new Player("Player 2", MAP_SIZE - 2, 0,playerTwoIcon));
+        players.add(new Player("Player 1", MAP_SIZE - 2, 0, playerOneIcon));
+        players.add(new Player("Player 2", MAP_SIZE - 2, 0, playerTwoIcon));
         return players;
     }
+
     // Check if the given position is adjacent to any market
     private boolean isAdjacentToMarket(int[][] map, int x, int y) {
         for (int i = Math.max(0, x - 1); i <= Math.min(MAP_SIZE - 1, x + 1); i++) {
