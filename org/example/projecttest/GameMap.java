@@ -132,13 +132,13 @@ public class GameMap extends JFrame {
     }
 
     private void playerSwitch(){
-        currentPlayer = (currentPlayer + 1)%players.size();
+        currentPlayer = (currentPlayer + 1)%players.size(); // increments until value for current player == number of players, then resets back to 0
         updateMapDisplay();
         // Update the label to reflect the current player's turn
         if (currentPlayer == 0) {
             playerTurnLabel.setText("Player One's Turn");
         } else {
-            playerTurnLabel.setText("Player Two's Turn");
+            playerTurnLabel.setText("Player Two's Turn"); // could change to work for any number of players?
         }
 
     }
