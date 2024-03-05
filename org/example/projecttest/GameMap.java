@@ -41,38 +41,45 @@ public class GameMap extends JFrame {
 
 
 
-    private int[][] generalMap;
-    private List<Player> players;
-    private JLabel[][] labels;
+    private int[][] generalMap; // Array representing the general map layout
+    private List<Player> players; // List to store player items
+    private JLabel[][] labels; // 2D array of JLabels representing the map cells
     private JButton diceButton; // Button for rolling the dice
-    private List<int[][]> playerMaps;
+    private List<int[][]> playerMaps; // List to store individual player maps
 
+    /**
+     * Constructs a new GameMap object
+     */
     public GameMap() {
-        setTitle("Game Map");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(true);
+        setTitle("Game Map"); // Sets the title of the game map window
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set the default close operation for the game map
+        setResizable(true); // Allows the game map window size be changed
 
         //generalMap = generateMap();
-        players = createPlayers();
-        initializeMaps();
+        players = createPlayers(); // Initialize the list of players
+        initializeMaps(); //Initialize the map
         labels = new JLabel[MAP_SIZE][MAP_SIZE]; // Adjust label array size to match the map size
 
+        //Create new JPanel for the game map
         JPanel panel = new JPanel();
+        // Set the layout of the map to a grid layout
         panel.setLayout(new GridLayout(MAP_SIZE, MAP_SIZE)); // Use MAP_SIZE for layout
 
+        //Loop through each cell fo the game map and create JLabels representing each cell
         for (int i = 0; i < MAP_SIZE; i++) {
             for (int j = 0; j < MAP_SIZE; j++) {
-                JLabel label = new JLabel();
-                label.setOpaque(true);
-                label.setBackground(getColorForCell(generalMap[i][j]));
-                label.setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE));
-                panel.add(label);
-                labels[i][j] = label;
+                JLabel label = new JLabel(); //Create new JLabel for the current cell
+                label.setOpaque(true); //Set the label to be opaque (allows background colour to be visible)
+                label.setBackground(getColorForCell(generalMap[i][j])); // Set the background colour of the label based on the value in the generalMap
+                label.setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE)); // Set the preferred size of the label to CELL_SIZE x CELL_SIZE pixels
+                panel.add(label); // Add the label to the panel for display
+                labels[i][j] = label; // Store the label in the labels array for future reference
             }
         }
 
-        // Add the dice button
+        // Add the dice button to the game map panel
         diceButton = new JButton("Roll dice");
+        // Add an ActionListener to the diceButton to handle button clicks
         diceButton.addActionListener(new ActionListener() {
             @Override                                    //override actionPerformed method in parent class to define our own behavior
             public void actionPerformed(ActionEvent e) {
@@ -80,15 +87,15 @@ public class GameMap extends JFrame {
             }
         });
 
-        // Add components to the content pane
+        // Add components to the content pane of the JFrame
         Container contentPane = getContentPane(); // allows access to window that allows base for UI elements to be placed on
-        contentPane.setLayout(new BorderLayout());
+        contentPane.setLayout(new BorderLayout()); // Set the layout of the content pane to BorderLayout
         contentPane.add(panel, BorderLayout.CENTER); // panel where map is implemented
         contentPane.add(diceButton, BorderLayout.SOUTH); //adds dice button
 
-        pack(); //formats window
-        setLocationRelativeTo(null);
-        setVisible(true);
+        pack(); // Adjust the size of the window to fit its components
+        setLocationRelativeTo(null); // Center the window on the screen
+        setVisible(true); // Set the window visible to the user
     }
 
     private void rollDice() {
