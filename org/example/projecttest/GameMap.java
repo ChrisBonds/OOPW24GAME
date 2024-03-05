@@ -1,33 +1,32 @@
-package org.example.projecttest; // This package declaration indicates that this class belongs to the org.example.projecttest package.
+package org.example.projecttest;
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import javax.swing.ImageIcon;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+import java.awt.Color;
 
-import javax.swing.*; // Importing the necessary Swing library for GUI components.
-import java.awt.*; // Importing the necessary AWT library for basic GUI functionalities.
-import java.awt.event.ActionEvent; // Importing ActionEvent for handling GUI events.
-import java.awt.event.ActionListener; // Importing ActionListener for handling GUI action events.
-import java.util.ArrayList; // Importing ArrayList from the Java Collections Framework to store dynamic arrays.
-import java.util.List; // Importing List from the Java Collections Framework for generic list operations.
-import java.util.Random; // Importing Random for generating random numbers.
-
-/**
- * The GameMap class represents the main frame for the game map GUI.
- * It extends JFrame to create a window for the game map.
- */
 public class GameMap extends JFrame {
 
-    // Constants defining various properties of the game map
-    private static final int MAP_SIZE = 12; // The size of the game map (number of cells per row/column).
-    private static final int SIZE = 10; // The size of each individual cell in pixels.
-    private static final int CELL_SIZE = 50; // The size of the cells on the map.
-    private static final Color COLOR_BORDER = Color.LIGHT_GRAY; // The color for the map border.
-    private static final Color COLOR_CASTLE = Color.YELLOW; // The color for the castle on the map.
-    private static final Color COLOR_WALL = Color.BLACK; // The color for the walls on the map.
-    private static final Color COLOR_MARKET = Color.ORANGE; // The color for the market on the map.
-    private static final Color COLOR_LOST_ITEM = Color.BLUE; // The color for the lost items on the map.
-    private static final Color COLOR_TRAP = Color.RED; // The color for the traps on the map.
-    private static final Color COLOR_STARTER_HOUSE = Color.CYAN; // The color for the starter house on the map.
-    private static final Color COLOR_TREASURE = Color.GREEN; // The color for the treasures on the map.
+    private ImageIcon playerIcon;
 
-    // Array representing different types of treasures along with their names and values
+    private static final int MAP_SIZE = 12; // Increase map size to accommodate the starter house
+    private static final int SIZE = 10;
+    private static final int CELL_SIZE = 50;
+    private static final Color COLOR_BORDER = Color.LIGHT_GRAY;
+    private static final Color COLOR_CASTLE = Color.YELLOW;
+    private static final Color COLOR_WALL = Color.BLACK;
+    private static final Color COLOR_MARKET = Color.ORANGE;
+    private static final Color COLOR_LOST_ITEM = Color.BLUE;
+    private static final Color COLOR_TRAP = Color.RED;
+    private static final Color COLOR_STARTER_HOUSE = Color.CYAN; // Color for the starter house
+    private static final Color COLOR_TREASURE = Color.GREEN;
     private static final String[][] TREASURES = {
             {"Diamond Ring", "1500"},
             {"Jewel-encrusted Sword", "2000"},
@@ -39,37 +38,44 @@ public class GameMap extends JFrame {
             {"Dragon’s Scroll", "1200"}
     };
 
-
-
-    private int[][] generalMap;
     private List<Player> players;
     private JLabel[][] labels;
     private JButton diceButton; // Button for rolling the dice
+    private JButton endTurnButton;
     private List<int[][]> playerMaps;
+    private int currentPlayer = 0;
+    private JLabel playerTurnLabel;
+
 
     public GameMap() {
         setTitle("Game Map");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(true);
 
-        //generalMap = generateMap();
+        playerIcon = createPlayerIcon(Color.magenta, 20, 20);
+
         players = createPlayers();
         initializeMaps();
-        labels = new JLabel[MAP_SIZE][MAP_SIZE]; // Adjust label array size to match the map size
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(MAP_SIZE, MAP_SIZE)); // Use MAP_SIZE for layout
+        JPanel panel = new JPanel(new GridLayout(MAP_SIZE, MAP_SIZE));
+        labels = new JLabel[MAP_SIZE][MAP_SIZE];
+
+        playerTurnLabel = new JLabel("Player One's Turn", SwingConstants.CENTER);
+        playerTurnLabel = new JLabel("Player One's Turn", SwingConstants.CENTER);
 
         for (int i = 0; i < MAP_SIZE; i++) {
             for (int j = 0; j < MAP_SIZE; j++) {
-                JLabel label = new JLabel();
+                JLabel label = new JLabel("", SwingConstants.CENTER);
                 label.setOpaque(true);
-                label.setBackground(getColorForCell(generalMap[i][j]));
                 label.setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE));
                 panel.add(label);
                 labels[i][j] = label;
             }
         }
+
+        updateMapDisplay();
+        add(panel, BorderLayout.CENTER);
+        setVisible(true);
 
         // Add the dice button
         diceButton = new JButton("Roll dice");
@@ -80,21 +86,61 @@ public class GameMap extends JFrame {
             }
         });
 
+        endTurnButton = new JButton("End Your Turn");
+        endTurnButton.addActionListener(new ActionListener() {
+            @Override                                    //override actionPerformed method in parent class to define our own behavior
+            public void actionPerformed(ActionEvent e) {
+                playerSwitch();
+            }
+        });
+
+        // Create a new JPanel to hold the playerTurnLabel and add it to the NORTH
+        JPanel labelPanel = new JPanel(new BorderLayout());
+        labelPanel.add(playerTurnLabel, BorderLayout.CENTER); // This ensures the label is centered within the panel
+
         // Add components to the content pane
         Container contentPane = getContentPane(); // allows access to window that allows base for UI elements to be placed on
         contentPane.setLayout(new BorderLayout());
+        contentPane.add(labelPanel, BorderLayout.NORTH);
         contentPane.add(panel, BorderLayout.CENTER); // panel where map is implemented
-        contentPane.add(diceButton, BorderLayout.SOUTH); //adds dice button
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(diceButton);
+        buttonPanel.add(endTurnButton);
+        contentPane.add(buttonPanel, BorderLayout.SOUTH);
+
 
         pack(); //formats window
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
+    private ImageIcon createPlayerIcon(Color color, int width, int height){
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+        g2d.setColor(color);
+        g2d.fillRect(0, 0, width, height);
+        g2d.dispose();
+        return new ImageIcon(image);
+    }
+
     private void rollDice() {
         Random random = new Random();
         int diceValue = random.nextInt(6) + 1; // Generate a random value from 1 to 6
         JOptionPane.showMessageDialog(this, "You rolled: " + diceValue); // "This" references the dialogue box currently in use
+    }
+
+    private void playerSwitch(){
+        currentPlayer = (currentPlayer + 1)%players.size();
+        updateMapDisplay();
+        // Update the label to reflect the current player's turn
+        if (currentPlayer == 0) {
+            playerTurnLabel.setText("Player One's Turn");
+        } else {
+            playerTurnLabel.setText("Player Two's Turn");
+        }
+
     }
 
     private int[][] generateMap() {
@@ -134,7 +180,7 @@ public class GameMap extends JFrame {
 
         // Place lost items
         int lostItemCount = 0;
-        while (lostItemCount < 6) {
+        while (lostItemCount < 13) {
             int x = random.nextInt(MAP_SIZE);
             int y = random.nextInt(MAP_SIZE);
             if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToLostItem(map, x, y)) {
@@ -172,24 +218,53 @@ public class GameMap extends JFrame {
         }
 
         // Place starter house outside the map
-        map[MAP_SIZE - 1][0] = 9; // Starter house
+        map[MAP_SIZE - 2][0] = 9; // Starter house
 
         return map;
     }
 
+    private void updateMapDisplay(){
+        int[][] currentMap = playerMaps.get(currentPlayer); // Get the current player's map
+        Player player = players.get(currentPlayer);
+        for (int i = 0; i < MAP_SIZE; i++) {
+            for (int j = 0; j < MAP_SIZE; j++) {
+                labels[i][j].setIcon(null);
+                labels[i][j].setBackground(getColorForCell(currentMap[i][j]));
+                if(i == player.getPawnX() && j == player.getPawnY()){
+                    labels[i][j].setIcon(player.getIcon());
+                }
+            }
+        }
+        getContentPane().revalidate();
+        getContentPane().repaint();
+    }
+
     private void initializeMaps() {
         playerMaps = new ArrayList<>();
+        int[][] baseMap = generateMap(); // Generate the base map once
+
+        // Clone the base map for each player to ensure they start with identical maps
         for (int i = 0; i < players.size(); i++) {
-            playerMaps.add(generateMap()); // Generate a separate map for each player
+            int[][] clonedMap = cloneMap(baseMap); // Create a clone of the base map for each player
+            playerMaps.add(clonedMap);
         }
     }
 
+    private int[][] cloneMap(int[][] baseMap) {
+        int[][] clonedMap = new int[MAP_SIZE][MAP_SIZE];
+        for (int i = 0; i < baseMap.length; i++) {
+            System.arraycopy(baseMap[i], 0, clonedMap[i], 0, baseMap[i].length);
+        }
+        return clonedMap;
+    }
+
+
     private List<Player> createPlayers() {
         List<Player> players = new ArrayList<>();
-        // Assuming we have two players
-        for (int i = 0; i < 2; i++) {
-            players.add(new Player("Player " + (i + 1), MAP_SIZE - 2, 1)); // Players start near the starter house
-        }
+        ImageIcon playerOneIcon = createPlayerIcon(Color.MAGENTA, 20, 20);
+        ImageIcon playerTwoIcon = createPlayerIcon(Color.PINK, 20, 20);
+        players.add(new Player("Player 1", MAP_SIZE - 2, 0,playerOneIcon));
+        players.add(new Player("Player 2", MAP_SIZE - 2, 0,playerTwoIcon));
         return players;
     }
     // Check if the given position is adjacent to any market
@@ -262,17 +337,9 @@ public class GameMap extends JFrame {
         new GameMap(); //lol
     }
 }
-
-class Player {
-    private String name;
-    private int pawnX;
-    private int pawnY;
-
-    public Player(String name, int startX, int startY) {
-        this.name = name;
-        this.pawnX = startX;
-        this.pawnY = startY;
-    }
-
-    // Getters and setters for player's name and pawn position
-}
+// Assuming currentPlayer is the current player index
+//Player currentPlayer = players.get(currentPlayer);
+//currentPlayer.getWallet().addMoney(100); // Add 100 money to the current player's wallet
+// Assuming currentPlayer is the current player index
+//Player currentPlayer = players.get(currentPlayer);
+//currentPlayer.getWallet().deductMoney(50); // Deduct 50 money from the current player's wallet
