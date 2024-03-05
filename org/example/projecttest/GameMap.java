@@ -190,7 +190,7 @@ public class GameMap extends JFrame {
         }
 
         // Place traps
-        int trapCount = random.nextInt(6) + 2; // Randomly choose trap count between 2 and 7
+        int trapCount = random.nextInt(4) + 2; // Randomly choose trap count between 2 and 7
         for (int i = 0; i < trapCount; i++) {
             int x = random.nextInt(MAP_SIZE);
             int y = random.nextInt(MAP_SIZE);
@@ -200,7 +200,7 @@ public class GameMap extends JFrame {
         }
 
         // Place walls
-        int wallCount = random.nextInt(6) + 2; // Randomly choose wall count between 2 and 7
+        int wallCount = random.nextInt(4) + 2; // Randomly choose wall count between 2 and 7
         for (int i = 0; i < wallCount; i++) {
             int x = random.nextInt(MAP_SIZE);
             int y = random.nextInt(MAP_SIZE);
@@ -325,17 +325,17 @@ public class GameMap extends JFrame {
     }
 
     private Color getColorForCell(int value) {
-        switch (value) {
-            case 1: return COLOR_BORDER;
-            case 2: return COLOR_CASTLE;
-            case 3: return COLOR_TREASURE; // Color for treasures
-            case 4: return COLOR_WALL;
-            case 5: return COLOR_MARKET;
-            case 6: return COLOR_LOST_ITEM;
-            case 7: return COLOR_TRAP;
-            case 9: return COLOR_STARTER_HOUSE; // Color for the starter house
-            default: return Color.WHITE;
-        }
+        return switch (value) {
+            case 1 -> COLOR_BORDER;
+            case 2 -> COLOR_CASTLE;
+            case 3 -> COLOR_TREASURE; // Color for treasures
+            case 4 -> COLOR_WALL;
+            case 5 -> COLOR_MARKET;
+            case 6 -> COLOR_LOST_ITEM;
+            case 7 -> COLOR_TRAP;
+            case 9 -> COLOR_STARTER_HOUSE; // Color for the starter house
+            default -> Color.WHITE;
+        };
     }
 
 
