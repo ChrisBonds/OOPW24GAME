@@ -248,33 +248,34 @@ public class GameMap extends JFrame {
 
     private void updateMapDisplay(){
         int[][] currentMap = playerMaps.get(currentPlayer); // Get the current player's map
-        Player player = players.get(currentPlayer);
+        Player player = players.get(currentPlayer); //Get the current player
         for (int i = 0; i < MAP_SIZE; i++) {
             for (int j = 0; j < MAP_SIZE; j++) {
-                labels[i][j].setIcon(null);
-                labels[i][j].setBackground(getColorForCell(currentMap[i][j]));
+                labels[i][j].setIcon(null); // Clear existing icons from labels
+                labels[i][j].setBackground(getColorForCell(currentMap[i][j])); // Set background color based on cell value
                 if(i == player.getPawnX() && j == player.getPawnY()){
                     labels[i][j].setIcon(player.getIcon());
                 }
             }
         }
+        // Revalidate and repaint the content pane to update the display
         getContentPane().revalidate();
         getContentPane().repaint();
     }
 
     private void initializeMaps() {
-        playerMaps = new ArrayList<>();
+        playerMaps = new ArrayList<>(); //Initialize the list of player maps
         int[][] baseMap = generateMap(); // Generate the base map once
 
         // Clone the base map for each player to ensure they start with identical maps
         for (int i = 0; i < players.size(); i++) {
             int[][] clonedMap = cloneMap(baseMap); // Create a clone of the base map for each player
-            playerMaps.add(clonedMap);
+            playerMaps.add(clonedMap); // Add the cloned map to the list of player maps
         }
     }
 
     private int[][] cloneMap(int[][] baseMap) {
-        int[][] clonedMap = new int[MAP_SIZE][MAP_SIZE];
+        int[][] clonedMap = new int[MAP_SIZE][MAP_SIZE]; // Create a new two-dimensional array for the cloned map
         for (int i = 0; i < baseMap.length; i++) {
             System.arraycopy(baseMap[i], 0, clonedMap[i], 0, baseMap[i].length);
         }
@@ -283,75 +284,82 @@ public class GameMap extends JFrame {
 
 
     private List<Player> createPlayers() {
-        List<Player> players = new ArrayList<>();
-        ImageIcon playerOneIcon = createPlayerIcon(Color.MAGENTA, 20, 20);
-        ImageIcon playerTwoIcon = createPlayerIcon(Color.PINK, 20, 20);
+        List<Player> players = new ArrayList<>(); // Initialize the list of players
+        ImageIcon playerOneIcon = createPlayerIcon(Color.MAGENTA, 20, 20); // Create an icon for player one
+        ImageIcon playerTwoIcon = createPlayerIcon(Color.PINK, 20, 20); // Create an icon for player two
+
+        // Add player one and player two to the list of players with their icons and starting positions
         players.add(new Player("Player 1", MAP_SIZE - 2, 0,playerOneIcon));
         players.add(new Player("Player 2", MAP_SIZE - 2, 0,playerTwoIcon));
         return players;
     }
     // Check if the given position is adjacent to any market
     private boolean isAdjacentToMarket(int[][] map, int x, int y) {
+        // Loop through neighboring cells of the given position and check if any of them is a market
         for (int i = Math.max(0, x - 1); i <= Math.min(MAP_SIZE - 1, x + 1); i++) {
             for (int j = Math.max(0, y - 1); j <= Math.min(MAP_SIZE - 1, y + 1); j++) {
                 if (map[i][j] == 5) {
-                    return true;
+                    return true; // Return true if adjacent to a market
                 }
             }
         }
-        return false;
+        return false; // Return false if not adjacent to any market
     }
 
     // Check if the given position is adjacent to any treasure
     private boolean isAdjacentToTreasure(int[][] map, int x, int y) {
+        // Loop through neighboring cells of the given position and check if any of them is a treasure
         for (int i = Math.max(0, x - 1); i <= Math.min(MAP_SIZE - 1, x + 1); i++) {
             for (int j = Math.max(0, y - 1); j <= Math.min(MAP_SIZE - 1, y + 1); j++) {
                 if (map[i][j] == 3) {
-                    return true;
+                    return true; // Return true if adjacent to a treasure
                 }
             }
         }
-        return false;
+        return false; // Return false if not adjacent to any treasure
     }
 
     // Check if the given position is adjacent to any lost item
     private boolean isAdjacentToLostItem(int[][] map, int x, int y) {
+        // Loop through neighboring cells of the given position and check if any of them is a lost item
         for (int i = Math.max(0, x - 1); i <= Math.min(MAP_SIZE - 1, x + 1); i++) {
             for (int j = Math.max(0, y - 1); j <= Math.min(MAP_SIZE - 1, y + 1); j++) {
                 if (map[i][j] == 6) {
-                    return true;
+                    return true;// Return true if adjacent to a lost item
                 }
             }
         }
-        return false;
+        return false; // Return false if not adjacent to any lost item
     }
 
     // Check if the given position is adjacent to any wall
     private boolean isAdjacentToWall(int[][] map, int x, int y) {
+        // Loop through neighboring cells of the given position and check if any of them is a wall
         for (int i = Math.max(0, x - 1); i <= Math.min(MAP_SIZE - 1, x + 1); i++) {
             for (int j = Math.max(0, y - 1); j <= Math.min(MAP_SIZE - 1, y + 1); j++) {
                 if (map[i][j] == 4) {
-                    return true;
+                    return true; // Return true if adjacent to a wall
                 }
             }
         }
-        return false;
+        return false; // Return false if not adjacent to any wall
     }
-    private boolean isAdjacentToCastle(int[][] map, int x, int y) { //saying method is inverted, need to check implementations to confirm
+    private boolean isAdjacentToCastle(int[][] map, int x, int y) {
+        // Check if the absolute difference between the position and the center of the map is less than or equal to 1 in both x and y directions
         return (Math.abs(x - SIZE / 2) <= 1 && Math.abs(y - SIZE / 2) <= 1);
     }
 
     private Color getColorForCell(int value) {
         switch (value) {
-            case 1: return COLOR_BORDER;
-            case 2: return COLOR_CASTLE;
-            case 3: return COLOR_TREASURE; // Color for treasures
-            case 4: return COLOR_WALL;
-            case 5: return COLOR_MARKET;
-            case 6: return COLOR_LOST_ITEM;
-            case 7: return COLOR_TRAP;
+            case 1: return COLOR_BORDER; //colour of boarder
+            case 2: return COLOR_CASTLE; //colour of castle
+            case 3: return COLOR_TREASURE; // colour for treasures
+            case 4: return COLOR_WALL; // colour of wall
+            case 5: return COLOR_MARKET; //colour of market
+            case 6: return COLOR_LOST_ITEM; //colour of lost item
+            case 7: return COLOR_TRAP; //colour of trap
             case 9: return COLOR_STARTER_HOUSE; // Color for the starter house
-            default: return Color.WHITE;
+            default: return Color.WHITE; //default colour
         }
     }
 
