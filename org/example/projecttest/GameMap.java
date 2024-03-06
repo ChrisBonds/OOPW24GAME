@@ -16,17 +16,19 @@ public class GameMap extends JFrame {
 
     private ImageIcon playerIcon;
 
-    private static final int MAP_SIZE = 12; // Increase map size to accommodate the starter house
-    private static final int SIZE = 10;
-    private static final int CELL_SIZE = 50;
-    private static final Color COLOR_BORDER = Color.LIGHT_GRAY;
-    private static final Color COLOR_CASTLE = Color.YELLOW;
-    private static final Color COLOR_WALL = Color.BLACK;
-    private static final Color COLOR_MARKET = Color.ORANGE;
-    private static final Color COLOR_LOST_ITEM = Color.BLUE;
-    private static final Color COLOR_TRAP = Color.RED;
+    private static final int MAP_SIZE = 12; // The size of the game map (number of cells per row/column)
+    private static final int SIZE = 10; // The size of each individual cell in pixels
+    private static final int CELL_SIZE = 50; // The size of the cells on the map
+    private static final Color COLOR_BORDER = Color.LIGHT_GRAY; // The color for the map border
+    private static final Color COLOR_CASTLE = Color.YELLOW; // The color for the castle on the map
+    private static final Color COLOR_WALL = Color.BLACK; // The color for the walls on the map.
+    private static final Color COLOR_MARKET = Color.ORANGE; // The color for the market on the map
+    private static final Color COLOR_LOST_ITEM = Color.BLUE; // The color for the lost items on the map
+    private static final Color COLOR_TRAP = Color.RED; // The color for the traps on the map.
     private static final Color COLOR_STARTER_HOUSE = Color.CYAN; // Color for the starter house
-    private static final Color COLOR_TREASURE = Color.GREEN;
+    private static final Color COLOR_TREASURE = Color.GREEN; // The color for the treasures on the map
+
+    // Array representing different types of treasures along with their names and values
     private static final String[][] TREASURES = {
             {"Diamond Ring", "1500"},
             {"Jewel-encrusted Sword", "2000"},
@@ -38,55 +40,71 @@ public class GameMap extends JFrame {
             {"Dragon’s Scroll", "1200"}
     };
 
-    private List<Player> players;
-    private JLabel[][] labels;
+    private List<Player> players; // List to store player objects
+    private JLabel[][] labels; // Two-dimensional array of JLabels representing the map cells
     private JButton diceButton; // Button for rolling the dice
-    private JButton endTurnButton;
-    private List<int[][]> playerMaps;
-    private int currentPlayer = 0;
-    private JLabel playerTurnLabel;
+    private JButton endTurnButton; // Button for ending the current player's turn
+    private List<int[][]> playerMaps; // List to store individual player maps
+    private int currentPlayer = 0; // Index of the current player in the players list
+    private JLabel playerTurnLabel; // JLabel for displaying the current player's turn
 
 
     public GameMap() {
-        setTitle("Game Map");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(true);
+        setTitle("Game Map"); // Set the title of the game map window
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set the default close operation for the game map window
+        setResizable(true); // Allow the game map window to be resizable
 
+        // Create the player icon with a custom color and size
         playerIcon = createPlayerIcon(Color.magenta, 20, 20);
 
+        // Initialize the list of players and their maps
         players = createPlayers();
         initializeMaps();
 
+        // Create a JPanel with a grid layout to hold the game map cells
         JPanel panel = new JPanel(new GridLayout(MAP_SIZE, MAP_SIZE));
         labels = new JLabel[MAP_SIZE][MAP_SIZE];
 
+        // Create a JLabel for displaying the current player's turn in the center of the window
         playerTurnLabel = new JLabel("Player One's Turn", SwingConstants.CENTER);
         playerTurnLabel = new JLabel("Player One's Turn", SwingConstants.CENTER);
 
+        // Loop through each cell of the game map
         for (int i = 0; i < MAP_SIZE; i++) {
             for (int j = 0; j < MAP_SIZE; j++) {
+                // Create a new JLabel centered with empty text
                 JLabel label = new JLabel("", SwingConstants.CENTER);
+                // Set the label to be opaque (allows background color to be visible)
                 label.setOpaque(true);
+                // Set the preferred size of the label to CELL_SIZE x CELL_SIZE pixels
                 label.setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE));
+                // Add the label to the panel for display
                 panel.add(label);
+                // Store the label in the labels array for future reference
                 labels[i][j] = label;
             }
         }
 
+        // Update the display of the game map
         updateMapDisplay();
+        // Add the panel containing the game map to the center of the window
         add(panel, BorderLayout.CENTER);
+        // Set the window visible to the user
         setVisible(true);
 
         // Add the dice button
         diceButton = new JButton("Roll dice");
+        // Add an ActionListener to the diceButton to handle button clicks
         diceButton.addActionListener(new ActionListener() {
+            // Override the actionPerformed method in the ActionListener interface to define custom behavior
             @Override                                    //override actionPerformed method in parent class to define our own behavior
             public void actionPerformed(ActionEvent e) {
                 rollDice();
             }
         });
-
+        // Create a JButton for ending the current player's turn and set its label
         endTurnButton = new JButton("End Your Turn");
+        // Add an ActionListener to the endTurnButton to handle button clicks
         endTurnButton.addActionListener(new ActionListener() {
             @Override                                    //override actionPerformed method in parent class to define our own behavior
             public void actionPerformed(ActionEvent e) {
@@ -112,28 +130,29 @@ public class GameMap extends JFrame {
 
 
         pack(); //formats window
-        setLocationRelativeTo(null);
-        setVisible(true);
+        setLocationRelativeTo(null); // Center the window on the screen
+        setVisible(true); // Set the window visible to the user
     }
 
     private ImageIcon createPlayerIcon(Color color, int width, int height){
+        // Create a BufferedImage with the specified width, height, and transparency type
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = image.createGraphics();
-        g2d.setColor(color);
-        g2d.fillRect(0, 0, width, height);
-        g2d.dispose();
-        return new ImageIcon(image);
+        Graphics2D g2d = image.createGraphics(); // Get the Graphics2D object for drawing on the image
+        g2d.setColor(color); // Set the color for drawing
+        g2d.fillRect(0, 0, width, height); // Fill the entire image with the specified color
+        g2d.dispose(); // Dispose of the Graphics2D object to release resources
+        return new ImageIcon(image); // Return the ImageIcon representing the player icon
     }
-
+    // Method to simulate rolling a die and display the result
     private void rollDice() {
-        Random random = new Random();
-        int diceValue = random.nextInt(6) + 1; // Generate a random value from 1 to 6
-        JOptionPane.showMessageDialog(this, "You rolled: " + diceValue); // "This" references the dialogue box currently in use
+        Random random = new Random(); // Create a new Random object
+        int diceValue = random.nextInt(6) + 1; // Generate a random value between 1 and 6 (inclusive)
+        JOptionPane.showMessageDialog(this, "You rolled: " + diceValue); // Display a message dialog showing the rolled value
     }
 
     private void playerSwitch(){
-        currentPlayer = (currentPlayer + 1)%players.size();
-        updateMapDisplay();
+        currentPlayer = (currentPlayer + 1)%players.size(); // Increment the current player index and wrap around if necessary
+        updateMapDisplay(); // Update the display of the game map to reflect changes
         // Update the label to reflect the current player's turn
         if (currentPlayer == 0) {
             playerTurnLabel.setText("Player One's Turn");
@@ -143,24 +162,28 @@ public class GameMap extends JFrame {
 
     }
 
+    // Method to generate the initial game map
     private int[][] generateMap() {
         int[][] map = new int[MAP_SIZE][MAP_SIZE]; // Adjust map size
 
-        // Initialize borders
+        // Initialize borders of the map with wall cells
         for (int i = 0; i < MAP_SIZE; i++) {
             map[0][i] = map[MAP_SIZE - 1][i] = map[i][0] = map[i][MAP_SIZE - 1] = 1; // assigning to 1 = enum for light grey?
         }
 
-        // Place castle
+        // Place castle in the center of the map
         map[SIZE / 2][SIZE / 2] = 2;
 
 
-        // Place treasures
-        Random random = new Random();
+        // Place treasures randomly on the map
+        Random random = new Random(); // Create a new Random object for generating random positions
         int treasureCount = 0;
+        // Loop until 8 treasures are placed
         while (treasureCount < 8) {
-            int x = random.nextInt(MAP_SIZE);
-            int y = random.nextInt(MAP_SIZE);
+            int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
+            int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
+
+            // Check if the randomly generated position is empty, not adjacent to the castle, and not adjacent to existing treasures
             if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToTreasure(map, x, y)) {
                 map[x][y] = 3; // Treasure
                 treasureCount++;
