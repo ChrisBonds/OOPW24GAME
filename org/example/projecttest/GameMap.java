@@ -70,6 +70,7 @@ public class GameMap extends JFrame {
         playerTurnLabel = new JLabel("Player One's Turn", SwingConstants.CENTER);
 
         // Loop through each cell of the game map
+        // Loop through each cell of the game map
         for (int i = 0; i < MAP_SIZE; i++) {
             for (int j = 0; j < MAP_SIZE; j++) {
                 // Create a new JLabel centered with empty text
@@ -78,12 +79,16 @@ public class GameMap extends JFrame {
                 label.setOpaque(true);
                 // Set the preferred size of the label to CELL_SIZE x CELL_SIZE pixels
                 label.setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE));
+                // Set border for the label to create grid lines
+                Border border = BorderFactory.createLineBorder(Color.BLACK);
+                label.setBorder(border);
                 // Add the label to the panel for display
                 panel.add(label);
                 // Store the label in the labels array for future reference
                 labels[i][j] = label;
             }
         }
+
 
         // Update the display of the game map
         updateMapDisplay();
@@ -162,33 +167,33 @@ public class GameMap extends JFrame {
 
     }
 
-        // Method to generate the initial game map
-        private int[][] generateMap() {
-            int[][] map = new int[MAP_SIZE][MAP_SIZE]; // Create a 2D array to represent the game map
+    // Method to generate the initial game map
+    private int[][] generateMap() {
+        int[][] map = new int[MAP_SIZE][MAP_SIZE]; // Create a 2D array to represent the game map
 
-            // Initialize borders of the map with wall cells
-            for (int i = 0; i < MAP_SIZE; i++) {
-                map[0][i] = map[MAP_SIZE - 1][i] = map[i][0] = map[i][MAP_SIZE - 1] = 1; // assigning to 1 = enum for light grey?
+        // Initialize borders of the map with wall cells
+        for (int i = 0; i < MAP_SIZE; i++) {
+            map[0][i] = map[MAP_SIZE - 1][i] = map[i][0] = map[i][MAP_SIZE - 1] = 1; // assigning to 1 = enum for light grey?
+        }
+
+        // Place castle in the center of the map
+        map[SIZE / 2][SIZE / 2] = 2; //Assigning 2 to represent the castle cell
+
+
+        // Place treasures randomly on the map
+        Random random = new Random(); // Create a new Random object for generating random positions
+        int treasureCount = 0;
+        // Loop until 8 treasures are placed
+        while (treasureCount < 8) {
+            int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
+            int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
+
+            // Check if the randomly generated position is empty, not adjacent to the castle, and not adjacent to existing treasures
+            if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToTreasure(map, x, y)) {
+                map[x][y] = 3; // Treasure cell represented by the 3
+                treasureCount++;
             }
-
-            // Place castle in the center of the map
-            map[SIZE / 2][SIZE / 2] = 2; //Assigning 2 to represent the castle cell
-
-
-            // Place treasures randomly on the map
-            Random random = new Random(); // Create a new Random object for generating random positions
-            int treasureCount = 0;
-            // Loop until 8 treasures are placed
-            while (treasureCount < 8) {
-                int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
-                int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
-
-                // Check if the randomly generated position is empty, not adjacent to the castle, and not adjacent to existing treasures
-                if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToTreasure(map, x, y)) {
-                    map[x][y] = 3; // Treasure cell represented by the 3
-                    treasureCount++;
-                }
-            }
+        }
 
         // Place markets
         int marketCount = 0;
