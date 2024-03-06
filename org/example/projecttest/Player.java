@@ -1,5 +1,6 @@
 package org.example.projecttest;
 import javax.swing.ImageIcon;
+import java.util.ArrayList;
 
 class Player {
     private String name;
@@ -7,6 +8,7 @@ class Player {
     private int pawnY;
     private ImageIcon icon;
     //use arraylist of weapons created for each player
+    private ArrayList<Weapon> heldWeapons;
     private Wallet wallet;
 
     public Player(String name, int startX, int startY, ImageIcon icon) {
@@ -15,6 +17,7 @@ class Player {
         this.pawnY = startY;
         this.icon = icon;
         this.wallet = new Wallet(); // Initialize the wallet
+        this.heldWeapons = new ArrayList<>(); //automatically initializes as empty
     }
 
     public ImageIcon getIcon(){
@@ -34,4 +37,17 @@ class Player {
     }
     public Wallet getWallet() {return wallet;}
     // Getters and setters for player's name and pawn position
+
+    public ArrayList<Weapon> getHeldWeapons() {
+        return heldWeapons;
+    }
+    public void setHeldWeapons(ArrayList<Weapon> heldWeapons) { //just in case we need to change entire ArrayList
+        this.heldWeapons = heldWeapons;
+    }
+
+
+    //method to add a weapon to players inventory
+    public void addWeapon(Weapon weapon){
+        this.heldWeapons.add(weapon);
+    }
 }
