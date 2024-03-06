@@ -1,12 +1,13 @@
 package org.example.projecttest;
 import javax.swing.ImageIcon;
+import java.util.ArrayList;
 
 class Player {
     private String name;
     private int pawnX;
     private int pawnY;
     private ImageIcon icon;
-
+    private ArrayList<Weapon> heldWeapons;
     private Wallet wallet;
 
     public Player(String name, int startX, int startY, ImageIcon icon) {
@@ -15,6 +16,7 @@ class Player {
         this.pawnY = startY;
         this.icon = icon;
         this.wallet = new Wallet(); // Initialize the wallet
+        this.heldWeapons = new ArrayList<>();
     }
 
     public ImageIcon getIcon(){
