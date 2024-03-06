@@ -7,7 +7,6 @@ class Player {
     private int pawnX;
     private int pawnY;
     private ImageIcon icon;
-    //use arraylist of weapons created for each player
     private ArrayList<Weapon> heldWeapons;
     private Wallet wallet;
 

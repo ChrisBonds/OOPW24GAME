@@ -190,7 +190,7 @@ public class GameMap extends JFrame {
         }
 
         // Place traps
-        int trapCount = random.nextInt(4) + 2; // Randomly choose trap count between 2 and 7
+        int trapCount = random.nextInt(2) + 3; // Randomly choose trap count between 2 and 7
         for (int i = 0; i < trapCount; i++) {
             int x = random.nextInt(MAP_SIZE);
             int y = random.nextInt(MAP_SIZE);
@@ -200,10 +200,10 @@ public class GameMap extends JFrame {
         }
 
         // Place walls
-        int wallCount = random.nextInt(4) + 2; // Randomly choose wall count between 2 and 7
+        int wallCount = random.nextInt(2) + 3; // Randomly choose wall count between 2 and 7
         for (int i = 0; i < wallCount; i++) {
-            int x = random.nextInt(MAP_SIZE);
-            int y = random.nextInt(MAP_SIZE);
+            int x = random.nextInt(MAP_SIZE) ;
+            int y = random.nextInt(MAP_SIZE)  ;
             if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToWall(map, x, y)) {
                 map[x][y] = 4; // Wall
             }
@@ -266,12 +266,6 @@ public class GameMap extends JFrame {
         players.add(new Player("Player 1", MAP_SIZE - 2, 0,playerOneIcon));
         players.add(new Player("Player 2", MAP_SIZE - 2, 0,playerTwoIcon));
         return players;
-        // Assuming currentPlayer is the current player index
-        // Player currentPlayer = players.get(currentPlayer);
-        // currentPlayer.getWallet().addMoney(100); // Add 100 money to the current player's wallet
-        // Assuming currentPlayer is the current player index
-        // Player currentPlayer = players.get(currentPlayer);
-        // currentPlayer.getWallet().deductMoney(50); // Deduct 50 money from the current player's wallet
     }
     // Check if the given position is adjacent to any market
     private boolean isAdjacentToMarket(int[][] map, int x, int y) {
@@ -325,17 +319,17 @@ public class GameMap extends JFrame {
     }
 
     private Color getColorForCell(int value) {
-        return switch (value) {
-            case 1 -> COLOR_BORDER;
-            case 2 -> COLOR_CASTLE;
-            case 3 -> COLOR_TREASURE; // Color for treasures
-            case 4 -> COLOR_WALL;
-            case 5 -> COLOR_MARKET;
-            case 6 -> COLOR_LOST_ITEM;
-            case 7 -> COLOR_TRAP;
-            case 9 -> COLOR_STARTER_HOUSE; // Color for the starter house
-            default -> Color.WHITE;
-        };
+        switch (value) {
+            case 1: return COLOR_BORDER;
+            case 2: return COLOR_CASTLE;
+            case 3: return COLOR_TREASURE; // Color for treasures
+            case 4: return COLOR_WALL;
+            case 5: return COLOR_MARKET;
+            case 6: return COLOR_LOST_ITEM;
+            case 7: return COLOR_TRAP;
+            case 9: return COLOR_STARTER_HOUSE; // Color for the starter house
+            default: return Color.WHITE;
+        }
     }
 
 
@@ -343,3 +337,9 @@ public class GameMap extends JFrame {
         new GameMap(); //lol
     }
 }
+// Assuming currentPlayer is the current player index
+//Player currentPlayer = players.get(currentPlayer);
+//currentPlayer.getWallet().addMoney(100); // Add 100 money to the current player's wallet
+// Assuming currentPlayer is the current player index
+//Player currentPlayer = players.get(currentPlayer);
+//currentPlayer.getWallet().deductMoney(50); // Deduct 50 money from the current player's wallet

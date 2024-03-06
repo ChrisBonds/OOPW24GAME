@@ -35,7 +35,7 @@ public class Weapon{
         this.powerLevel = powerLevel;
     }
 
-    public boolean CheckMainHand() {
+    public boolean checkMainHand() {
         return isMainHand;
     }
 
