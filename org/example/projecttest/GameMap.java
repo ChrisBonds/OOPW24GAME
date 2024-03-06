@@ -69,7 +69,7 @@ public class GameMap extends JFrame {
         playerTurnLabel = new JLabel("Player One's Turn", SwingConstants.CENTER);
         playerTurnLabel = new JLabel("Player One's Turn", SwingConstants.CENTER);
 
-        // Loop through each cell of the game map
+
         // Loop through each cell of the game map
         for (int i = 0; i < MAP_SIZE; i++) {
             for (int j = 0; j < MAP_SIZE; j++) {
