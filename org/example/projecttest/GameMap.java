@@ -162,39 +162,39 @@ public class GameMap extends JFrame {
 
     }
 
-    // Method to generate the initial game map
-    private int[][] generateMap() {
-        int[][] map = new int[MAP_SIZE][MAP_SIZE]; // Adjust map size
+        // Method to generate the initial game map
+        private int[][] generateMap() {
+            int[][] map = new int[MAP_SIZE][MAP_SIZE]; // Create a 2D array to represent the game map
 
-        // Initialize borders of the map with wall cells
-        for (int i = 0; i < MAP_SIZE; i++) {
-            map[0][i] = map[MAP_SIZE - 1][i] = map[i][0] = map[i][MAP_SIZE - 1] = 1; // assigning to 1 = enum for light grey?
-        }
-
-        // Place castle in the center of the map
-        map[SIZE / 2][SIZE / 2] = 2;
-
-
-        // Place treasures randomly on the map
-        Random random = new Random(); // Create a new Random object for generating random positions
-        int treasureCount = 0;
-        // Loop until 8 treasures are placed
-        while (treasureCount < 8) {
-            int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
-            int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
-
-            // Check if the randomly generated position is empty, not adjacent to the castle, and not adjacent to existing treasures
-            if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToTreasure(map, x, y)) {
-                map[x][y] = 3; // Treasure
-                treasureCount++;
+            // Initialize borders of the map with wall cells
+            for (int i = 0; i < MAP_SIZE; i++) {
+                map[0][i] = map[MAP_SIZE - 1][i] = map[i][0] = map[i][MAP_SIZE - 1] = 1; // assigning to 1 = enum for light grey?
             }
-        }
+
+            // Place castle in the center of the map
+            map[SIZE / 2][SIZE / 2] = 2; //Assigning 2 to represent the castle cell
+
+
+            // Place treasures randomly on the map
+            Random random = new Random(); // Create a new Random object for generating random positions
+            int treasureCount = 0;
+            // Loop until 8 treasures are placed
+            while (treasureCount < 8) {
+                int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
+                int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
+
+                // Check if the randomly generated position is empty, not adjacent to the castle, and not adjacent to existing treasures
+                if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToTreasure(map, x, y)) {
+                    map[x][y] = 3; // Treasure cell represented by the 3
+                    treasureCount++;
+                }
+            }
 
         // Place markets
         int marketCount = 0;
         while (marketCount < 5) {
-            int x = random.nextInt(MAP_SIZE);
-            int y = random.nextInt(MAP_SIZE);
+            int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
+            int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
             if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToMarket(map, x, y)) {
                 map[x][y] = 5; // Market
                 marketCount++;
@@ -204,8 +204,8 @@ public class GameMap extends JFrame {
         // Place lost items
         int lostItemCount = 0;
         while (lostItemCount < 13) {
-            int x = random.nextInt(MAP_SIZE);
-            int y = random.nextInt(MAP_SIZE);
+            int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
+            int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
             if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToLostItem(map, x, y)) {
                 map[x][y] = 6; // Lost Item
                 lostItemCount++;
@@ -215,8 +215,8 @@ public class GameMap extends JFrame {
         // Place traps
         int trapCount = random.nextInt(2) + 3; // Randomly choose trap count between 2 and 7
         for (int i = 0; i < trapCount; i++) {
-            int x = random.nextInt(MAP_SIZE);
-            int y = random.nextInt(MAP_SIZE);
+            int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
+            int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
             if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y)) {
                 map[x][y] = 7; // Trap
             }
@@ -225,8 +225,8 @@ public class GameMap extends JFrame {
         // Place walls
         int wallCount = random.nextInt(2) + 3; // Randomly choose wall count between 2 and 7
         for (int i = 0; i < wallCount; i++) {
-            int x = random.nextInt(MAP_SIZE) ;
-            int y = random.nextInt(MAP_SIZE)  ;
+            int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
+            int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
             if (map[x][y] == 0 && !isAdjacentToCastle(map, x, y) && !isAdjacentToWall(map, x, y)) {
                 map[x][y] = 4; // Wall
             }
