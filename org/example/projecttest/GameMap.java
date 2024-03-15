@@ -11,6 +11,8 @@ import javax.swing.ImageIcon;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
 
 public class GameMap extends JFrame {
 
@@ -47,6 +49,8 @@ public class GameMap extends JFrame {
     private List<int[][]> playerMaps; // List to store individual player maps
     private int currentPlayer = 0; // Index of the current player in the players list
     private JLabel playerTurnLabel; // JLabel for displaying the current player's turn
+    private int diceRollResult = 0;
+    private boolean firstMoveOutsideBorder = false;
 
 
     public GameMap() {
@@ -137,6 +141,57 @@ public class GameMap extends JFrame {
         pack(); //formats window
         setLocationRelativeTo(null); // Center the window on the screen
         setVisible(true); // Set the window visible to the user
+
+        this.addKeyListener(new KeyAdapter(){
+            @Override
+            public void keyPressed(KeyEvent e){
+                super.keyPressed(e);
+                handlePlayerMovement(e);
+            }
+        });
+        this.setFocusable(true);
+    }
+
+    private void handlePlayerMovement(KeyEvent e){
+        if(diceRollResult == 0)return;
+        Player currentPlayer = players.get(this.currentPlayer);
+        int x = currentPlayer.getPawnX();
+        int y = currentPlayer.getPawnY();
+        switch(e.getKeyCode()){
+            case KeyEvent.VK_UP:
+            y--; break;
+            case KeyEvent.VK_DOWN:
+            y++; break;
+            case KeyEvent.VK_LEFT:
+            x--; break;
+            case KeyEvent.VK_RIGHT:
+            x++; break;
+        }
+
+        if(isValidMove(x,y, firstMoveOutsideBorder)){
+            currentPlayer.setPawnX(x);
+            currentPlayer.setPawnY(y);
+
+            System.out.println(currentPlayer.getPawnX());
+            System.out.println(currentPlayer.getPawnY());
+
+            diceRollResult--;
+            if (!firstMoveOutsideBorder) {
+                // Implement logic to check if this move puts the player outside the border.
+                firstMoveOutsideBorder = true; // Set this based on your game logic
+                updateMapDisplay();
+            }
+        }
+    }
+    //Can also check if its a wall or trap here and what not
+    private boolean isValidMove(int x, int y, boolean firstMoveOutsideBorder){
+        if (x < 0 || x >= MAP_SIZE || y < 0 || y >= MAP_SIZE) {
+            return false;
+        }
+        if (firstMoveOutsideBorder && (x == 0 || y == 0 || x == MAP_SIZE - 1 || y == MAP_SIZE - 1)) {
+            return false;
+        }
+        return true;
     }
 
     private ImageIcon createPlayerIcon(Color color, int width, int height){
@@ -151,8 +206,8 @@ public class GameMap extends JFrame {
     // Method to simulate rolling a die and display the result
     private void rollDice() {
         Random random = new Random(); // Create a new Random object
-        int diceValue = random.nextInt(6) + 1; // Generate a random value between 1 and 6 (inclusive)
-        JOptionPane.showMessageDialog(this, "You rolled: " + diceValue); // Display a message dialog showing the rolled value
+        diceRollResult = random.nextInt(6) + 1; // Generate a random value between 1 and 6 (inclusive)
+        JOptionPane.showMessageDialog(this, "You rolled: " + diceRollResult); // Display a message dialog showing the rolled value
     }
 
     private void playerSwitch(){

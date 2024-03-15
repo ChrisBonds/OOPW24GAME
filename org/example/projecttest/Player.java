@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 class Player {
     private String name;
-    private int pawnX;
-    private int pawnY;
+    public int pawnX;
+    public int pawnY;
     private ImageIcon icon;
     private ArrayList<Weapon> heldWeapons;
     private Wallet wallet;
@@ -36,4 +36,12 @@ class Player {
     }
     public Wallet getWallet() {return wallet;}
     // Getters and setters for player's name and pawn position
+
+    public void setPawnX(int x){
+        this.pawnX = x;
+    }
+
+    public void setPawnY(int y){
+        this.pawnY = y;
+    }
 }
