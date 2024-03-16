@@ -145,46 +145,51 @@ public class GameMap extends JFrame {
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
+                System.out.println("KeyPressed Detected for Player: " + currentPlayer);
+
                 handlePlayerMovement(e);
             }
         });
         this.setFocusable(true);
+
     }
 
+
+
     private void handlePlayerMovement(KeyEvent e) {
-        Player currentPlayer = players.get(this.currentPlayer);
-        int x = currentPlayer.getPawnX();
-        int y = currentPlayer.getPawnY();
+        if (diceRollResult > 0) {
+            Player currentPlayer = players.get(this.currentPlayer);
+            int x = currentPlayer.getPawnX();
+            int y = currentPlayer.getPawnY();
 
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                x--;
-                System.out.println("Moving UP: X = " + x + ", Y = " + y);
-                break;
-            case KeyEvent.VK_DOWN:
-                x++;
-                System.out.println("Moving DOWN: X = " + x + ", Y = " + y);
-                break;
-            case KeyEvent.VK_LEFT:
-                y--;
-                System.out.println("Moving LEFT: X = " + x + ", Y = " + y);
-                break;
-            case KeyEvent.VK_RIGHT:
-                y++;
-                System.out.println("Moving RIGHT: X = " + x + ", Y = " + y);
-                break;
-        }
-
-        if (isValidMove(x, y, firstMoveOutsideBorder)) {
-            currentPlayer.setPawnX(x);
-            currentPlayer.setPawnY(y);
-
-            diceRollResult--; // Decrease the remaining dice roll count
-            if (!firstMoveOutsideBorder) {
-                firstMoveOutsideBorder = true;
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                    x--;
+                    System.out.println("Moving UP: X = " + x + ", Y = " + y);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    x++;
+                    System.out.println("Moving DOWN: X = " + x + ", Y = " + y);
+                    break;
+                case KeyEvent.VK_LEFT:
+                    y--;
+                    System.out.println("Moving LEFT: X = " + x + ", Y = " + y);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    y++;
+                    System.out.println("Moving RIGHT: X = " + x + ", Y = " + y);
+                    break;
             }
 
-            updateMapDisplay();
+            if (isValidMove(x, y, firstMoveOutsideBorder)) {
+                currentPlayer.setPawnX(x);
+                currentPlayer.setPawnY(y);
+                diceRollResult--; // Decrease the remaining dice roll count
+                updateMapDisplay();
+                if (!firstMoveOutsideBorder) {
+                    firstMoveOutsideBorder = true;
+                }
+            }
         }
     }
 
@@ -223,10 +228,12 @@ public class GameMap extends JFrame {
         Random random = new Random(); // Create a new Random object
         diceRollResult = random.nextInt(6) + 1; // Generate a random value between 1 and 6 (inclusive)
         JOptionPane.showMessageDialog(this, "You rolled: " + diceRollResult); // Display a message dialog showing the rolled value
+        this.requestFocusInWindow();
     }
 
     private void playerSwitch(){
         currentPlayer = (currentPlayer + 1)%players.size(); // Increment the current player index and wrap around if necessary
+        diceRollResult = 0;
         updateMapDisplay(); // Update the display of the game map to reflect changes
         // Update the label to reflect the current player's turn
         if (currentPlayer == 0) {
@@ -234,7 +241,7 @@ public class GameMap extends JFrame {
         } else {
             playerTurnLabel.setText("Player Two's Turn");
         }
-
+        this.requestFocusInWindow();
     }
 
     // Method to generate the initial game map
