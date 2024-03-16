@@ -152,23 +152,27 @@ public class GameMap extends JFrame {
         this.setFocusable(true);
     }
 
-    private void handlePlayerMovement(KeyEvent e){
-        if(diceRollResult == 0)return;
+    private void handlePlayerMovement(KeyEvent e) {
+        if (diceRollResult == 0) return;
         Player currentPlayer = players.get(this.currentPlayer);
         int x = currentPlayer.getPawnX();
         int y = currentPlayer.getPawnY();
-        switch(e.getKeyCode()){
+        switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-            y--; break;
+                y--;
+                break;
             case KeyEvent.VK_DOWN:
-            y++; break;
+                y++;
+                break;
             case KeyEvent.VK_LEFT:
-            x--; break;
+                x--;
+                break;
             case KeyEvent.VK_RIGHT:
-            x++; break;
+                x++;
+                break;
         }
 
-        if(isValidMove(x,y, firstMoveOutsideBorder)){
+        if (isValidMove(x, y, firstMoveOutsideBorder)) {
             currentPlayer.setPawnX(x);
             currentPlayer.setPawnY(y);
 
@@ -179,7 +183,7 @@ public class GameMap extends JFrame {
             if (!firstMoveOutsideBorder) {
                 // Implement logic to check if this move puts the player outside the border.
                 firstMoveOutsideBorder = true; // Set this based on your game logic
-                updateMapDisplay();
+                updateMapDisplay(); // Update the map display after each valid move
             }
         }
     }
