@@ -27,21 +27,21 @@ class Player {
         this.icon = icon;
     }
 
-    public int getPawnX(){
+    public int getPawnX() {
         return pawnX;
     }
 
-    public int getPawnY(){
+    public void setPawnX(int pawnX) {
+        this.pawnX = pawnX;
+    }
+
+    public int getPawnY() {
         return pawnY;
+    }
+
+    public void setPawnY(int pawnY) {
+        this.pawnY = pawnY;
     }
     public Wallet getWallet() {return wallet;}
     // Getters and setters for player's name and pawn position
-
-    public void setPawnX(int x){
-        this.pawnX = x;
-    }
-
-    public void setPawnY(int y){
-        this.pawnY = y;
-    }
 }

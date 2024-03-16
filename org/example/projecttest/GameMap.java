@@ -142,10 +142,9 @@ public class GameMap extends JFrame {
         setLocationRelativeTo(null); // Center the window on the screen
         setVisible(true); // Set the window visible to the user
 
-        this.addKeyListener(new KeyAdapter(){
+        this.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e){
-                super.keyPressed(e);
+            public void keyPressed(KeyEvent e) {
                 handlePlayerMovement(e);
             }
         });
@@ -153,22 +152,26 @@ public class GameMap extends JFrame {
     }
 
     private void handlePlayerMovement(KeyEvent e) {
-        if (diceRollResult == 0) return;
         Player currentPlayer = players.get(this.currentPlayer);
         int x = currentPlayer.getPawnX();
         int y = currentPlayer.getPawnY();
+
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-                y--;
+                x--;
+                System.out.println("Moving UP: X = " + x + ", Y = " + y);
                 break;
             case KeyEvent.VK_DOWN:
-                y++;
+                x++;
+                System.out.println("Moving DOWN: X = " + x + ", Y = " + y);
                 break;
             case KeyEvent.VK_LEFT:
-                x--;
+                y--;
+                System.out.println("Moving LEFT: X = " + x + ", Y = " + y);
                 break;
             case KeyEvent.VK_RIGHT:
-                x++;
+                y++;
+                System.out.println("Moving RIGHT: X = " + x + ", Y = " + y);
                 break;
         }
 
@@ -176,17 +179,16 @@ public class GameMap extends JFrame {
             currentPlayer.setPawnX(x);
             currentPlayer.setPawnY(y);
 
-            System.out.println(currentPlayer.getPawnX());
-            System.out.println(currentPlayer.getPawnY());
-
-            diceRollResult--;
+            diceRollResult--; // Decrease the remaining dice roll count
             if (!firstMoveOutsideBorder) {
-                // Implement logic to check if this move puts the player outside the border.
-                firstMoveOutsideBorder = true; // Set this based on your game logic
-                updateMapDisplay(); // Update the map display after each valid move
+                firstMoveOutsideBorder = true;
             }
+
+            updateMapDisplay();
         }
     }
+
+
     //Can also check if its a wall or trap here and what not
     private boolean isValidMove(int x, int y, boolean firstMoveOutsideBorder){
         if (x < 0 || x >= MAP_SIZE || y < 0 || y >= MAP_SIZE) {
@@ -197,7 +199,16 @@ public class GameMap extends JFrame {
         }
         return true;
     }
+    private List<Player> createPlayers() {
+        List<Player> players = new ArrayList<>(); // Initialize the list of players
+        ImageIcon playerOneIcon = createPlayerIcon(Color.MAGENTA, 20, 20); // Create an icon for player one
+        ImageIcon playerTwoIcon = createPlayerIcon(Color.PINK, 20, 20); // Create an icon for player two
 
+        // Add player one and player two to the list of players with their icons and starting positions
+        players.add(new Player("Player 1", MAP_SIZE - 2, 0,playerOneIcon));
+        players.add(new Player("Player 2", MAP_SIZE - 2, 0,playerTwoIcon));
+        return players;
+    }
     private ImageIcon createPlayerIcon(Color color, int width, int height){
         // Create a BufferedImage with the specified width, height, and transparency type
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -317,15 +328,16 @@ public class GameMap extends JFrame {
             for (int j = 0; j < MAP_SIZE; j++) {
                 labels[i][j].setIcon(null); // Clear existing icons from labels
                 labels[i][j].setBackground(getColorForCell(currentMap[i][j])); // Set background color based on cell value
-                if(i == player.getPawnX() && j == player.getPawnY()){
-                    labels[i][j].setIcon(player.getIcon());
+
                 }
             }
-        }
-        // Revalidate and repaint the content pane to update the display
+        labels[player.getPawnX()][player.getPawnY()].setIcon(player.getIcon());
         getContentPane().revalidate();
         getContentPane().repaint();
-    }
+        }
+        // Revalidate and repaint the content pane to update the display
+
+
 
     private void initializeMaps() {
         playerMaps = new ArrayList<>(); //Initialize the list of player maps
@@ -347,16 +359,7 @@ public class GameMap extends JFrame {
     }
 
 
-    private List<Player> createPlayers() {
-        List<Player> players = new ArrayList<>(); // Initialize the list of players
-        ImageIcon playerOneIcon = createPlayerIcon(Color.MAGENTA, 20, 20); // Create an icon for player one
-        ImageIcon playerTwoIcon = createPlayerIcon(Color.PINK, 20, 20); // Create an icon for player two
 
-        // Add player one and player two to the list of players with their icons and starting positions
-        players.add(new Player("Player 1", MAP_SIZE - 2, 0,playerOneIcon));
-        players.add(new Player("Player 2", MAP_SIZE - 2, 0,playerTwoIcon));
-        return players;
-    }
     // Check if the given position is adjacent to any market
     private boolean isAdjacentToMarket(int[][] map, int x, int y) {
         // Loop through neighboring cells of the given position and check if any of them is a market
@@ -429,6 +432,7 @@ public class GameMap extends JFrame {
 
 
     public static void main(String[] args) {
+
         new GameMap(); //lol
     }
 }
