@@ -29,6 +29,7 @@ public class GameMap extends JFrame {
     private static final Color COLOR_TRAP = Color.RED; // The color for the traps on the map.
     private static final Color COLOR_STARTER_HOUSE = Color.CYAN; // Color for the starter house
     private static final Color COLOR_TREASURE = Color.GREEN; // The color for the treasures on the map
+    private static final Color COLOR_COVERED = Color.DARK_GRAY;
 
     // Array representing different types of treasures along with their names and values
     private static final String[][] TREASURES = {
@@ -145,7 +146,7 @@ public class GameMap extends JFrame {
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                System.out.println("KeyPressed Detected for Player: " + currentPlayer);
+                System.out.println("KeyPressed Detected for Player: " + (currentPlayer + 1) );
 
                 handlePlayerMovement(e);
             }
@@ -184,8 +185,11 @@ public class GameMap extends JFrame {
             if (isValidMove(x, y, firstMoveOutsideBorder)) {
                 currentPlayer.setPawnX(x);
                 currentPlayer.setPawnY(y);
+                currentPlayer.addCoordinatePair(new Player.Coordinate(x, y));
                 diceRollResult--; // Decrease the remaining dice roll count
                 updateMapDisplay();
+                // add method to check if the square landed on each move is a point of interest
+                // also handle uncovering here
                 if (!firstMoveOutsideBorder) {
                     firstMoveOutsideBorder = true;
                 }
@@ -334,17 +338,18 @@ public class GameMap extends JFrame {
         for (int i = 0; i < MAP_SIZE; i++) {
             for (int j = 0; j < MAP_SIZE; j++) {
                 labels[i][j].setIcon(null); // Clear existing icons from labels
-                labels[i][j].setBackground(getColorForCell(currentMap[i][j])); // Set background color based on cell value
-
-                }
+                //if statement checking if current player has been in this position before
+                if (player.getPreviousCoordinatePairs().contains(new Player.Coordinate(i,j))) {
+                    labels[i][j].setBackground(getColorForCell(currentMap[i][j])); // Set background color based on cell value
+                } else labels[i][j].setBackground(COLOR_COVERED);
+                // else make cell color grey
             }
+        }
         labels[player.getPawnX()][player.getPawnY()].setIcon(player.getIcon());
         getContentPane().revalidate();
         getContentPane().repaint();
-        }
+    }
         // Revalidate and repaint the content pane to update the display
-
-
 
     private void initializeMaps() {
         playerMaps = new ArrayList<>(); //Initialize the list of player maps
@@ -364,8 +369,6 @@ public class GameMap extends JFrame {
         }
         return clonedMap;
     }
-
-
 
     // Check if the given position is adjacent to any market
     private boolean isAdjacentToMarket(int[][] map, int x, int y) {
