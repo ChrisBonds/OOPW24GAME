@@ -324,7 +324,6 @@ public class GameMap extends JFrame {
                 treasureCount++;
             }
         }
-
         // Place markets
         int marketCount = 0;
         while (marketCount < 5) {
