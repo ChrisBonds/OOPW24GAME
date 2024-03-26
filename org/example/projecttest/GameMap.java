@@ -233,7 +233,6 @@ public class GameMap extends JFrame {
     }
 
 
-    //Can also check if its a wall or trap here and what not
     private boolean isValidMove(int x, int y, boolean firstMoveOutsideBorder){
         if (x < 0 || x >= MAP_SIZE || y < 0 || y >= MAP_SIZE) {
             return false;
@@ -241,8 +240,12 @@ public class GameMap extends JFrame {
         if (firstMoveOutsideBorder && (x == 0 || y == 0 || x == MAP_SIZE - 1 || y == MAP_SIZE - 1)) {
             return false;
         }
+        if (playerMaps.get(currentPlayer)[x][y] == 4) { // Check if the target square is a wall (4 represents a wall)
+            return false;
+        }
         return true;
     }
+
     private List<Player> createPlayers() {
         List<Player> players = new ArrayList<>(); // Initialize the list of players
         ImageIcon playerOneIcon = createPlayerIcon(Color.MAGENTA, 20, 20); // Create an icon for player one
