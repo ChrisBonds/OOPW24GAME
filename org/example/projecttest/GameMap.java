@@ -13,6 +13,9 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
+import java.util.HashMap;
+import java.util.Map;
+import java.net.URL;
 
 public class GameMap extends JFrame {
 
@@ -52,9 +55,16 @@ public class GameMap extends JFrame {
     private JLabel playerTurnLabel; // JLabel for displaying the current player's turn
     private int diceRollResult = 0;
     private boolean firstMoveOutsideBorder = false;
+    private Map<Integer, ImageIcon> diceImages = new HashMap<>();
+    private JPanel sideMenu = new JPanel();
+    private JLabel diceLabel = new JLabel();
 
 
     public GameMap() {
+        loadDiceImages();
+        diceLabel = new JLabel();
+        sideMenu.add(diceLabel);
+
         setTitle("Game Map"); // Set the title of the game map window
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set the default close operation for the game map window
         setResizable(true); // Allow the game map window to be resizable
@@ -94,6 +104,9 @@ public class GameMap extends JFrame {
             }
         }
 
+        JPanel sideMenu = new JPanel();
+        sideMenu.setLayout(new BoxLayout(sideMenu, BoxLayout.Y_AXIS));
+        sideMenu.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Update the display of the game map
         updateMapDisplay();
@@ -122,6 +135,16 @@ public class GameMap extends JFrame {
             }
         });
 
+        JLabel playerInfoLabel = new JLabel("Player Info");
+        JLabel gameStatusLabel = new JLabel("Game Status");
+
+        sideMenu.add(diceButton);
+        sideMenu.add(endTurnButton);
+        sideMenu.add(playerInfoLabel);
+        sideMenu.add(gameStatusLabel);
+        getContentPane().add(sideMenu, BorderLayout.EAST);
+        getContentPane().add(panel, BorderLayout.CENTER);
+
         // Create a new JPanel to hold the playerTurnLabel and add it to the NORTH
         JPanel labelPanel = new JPanel(new BorderLayout());
         labelPanel.add(playerTurnLabel, BorderLayout.CENTER); // This ensures the label is centered within the panel
@@ -131,12 +154,12 @@ public class GameMap extends JFrame {
         contentPane.setLayout(new BorderLayout());
         contentPane.add(labelPanel, BorderLayout.NORTH);
         contentPane.add(panel, BorderLayout.CENTER); // panel where map is implemented
+        contentPane.add(sideMenu, BorderLayout.EAST);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.add(diceButton);
-        buttonPanel.add(endTurnButton);
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
+        sideMenu.setPreferredSize(new Dimension(300,getHeight()));
 
 
         pack(); //formats window
@@ -155,6 +178,18 @@ public class GameMap extends JFrame {
 
     }
 
+    private void loadDiceImages(){
+        for(int i = 1; i <= 6; i++){
+            String path = "dice"+ i +".png";
+            URL url = GameMap.class.getResource(path);
+            if(url != null){
+                ImageIcon icon = new ImageIcon(url);
+                diceImages.put(i, icon);
+            }else{
+                System.err.println("Failed To Load Image " + i);
+            }
+        }
+    }
 
 
     private void handlePlayerMovement(KeyEvent e) {
@@ -231,13 +266,16 @@ public class GameMap extends JFrame {
     private void rollDice() {
         Random random = new Random(); // Create a new Random object
         diceRollResult = random.nextInt(6) + 1; // Generate a random value between 1 and 6 (inclusive)
-        JOptionPane.showMessageDialog(this, "You rolled: " + diceRollResult); // Display a message dialog showing the rolled value
+        diceLabel.setIcon(diceImages.get(diceRollResult));
+        //JOptionPane.showMessageDialog(this, "You rolled: " + diceRollResult); // Display a message dialog showing the rolled value
+        diceButton.setEnabled(false);
         this.requestFocusInWindow();
     }
 
     private void playerSwitch(){
         currentPlayer = (currentPlayer + 1)%players.size(); // Increment the current player index and wrap around if necessary
         diceRollResult = 0;
+        diceButton.setEnabled(true);
         updateMapDisplay(); // Update the display of the game map to reflect changes
         // Update the label to reflect the current player's turn
         if (currentPlayer == 0) {
@@ -349,7 +387,7 @@ public class GameMap extends JFrame {
         getContentPane().revalidate();
         getContentPane().repaint();
     }
-        // Revalidate and repaint the content pane to update the display
+    // Revalidate and repaint the content pane to update the display
 
     private void initializeMaps() {
         playerMaps = new ArrayList<>(); //Initialize the list of player maps
