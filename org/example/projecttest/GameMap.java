@@ -63,7 +63,6 @@ public class GameMap extends JFrame {
     public GameMap() {
         loadDiceImages();
         diceLabel = new JLabel();
-        sideMenu.add(diceLabel);
 
         setTitle("Game Map"); // Set the title of the game map window
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set the default close operation for the game map window
@@ -104,7 +103,6 @@ public class GameMap extends JFrame {
             }
         }
 
-        JPanel sideMenu = new JPanel();
         sideMenu.setLayout(new BoxLayout(sideMenu, BoxLayout.Y_AXIS));
         sideMenu.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -139,6 +137,7 @@ public class GameMap extends JFrame {
         JLabel gameStatusLabel = new JLabel("Game Status");
 
         sideMenu.add(diceButton);
+        sideMenu.add(diceLabel);
         sideMenu.add(endTurnButton);
         sideMenu.add(playerInfoLabel);
         sideMenu.add(gameStatusLabel);
@@ -179,13 +178,13 @@ public class GameMap extends JFrame {
     }
 
     private void loadDiceImages(){
-        for(int i = 1; i <= 6; i++){
-            String path = "dice"+ i +".png";
+        for(int i = 1; i <= 6; i++) {
+            String path = "DiceImages/" + i + ".png";
             URL url = GameMap.class.getResource(path);
-            if(url != null){
+            if (url != null) {
                 ImageIcon icon = new ImageIcon(url);
                 diceImages.put(i, icon);
-            }else{
+            } else {
                 System.err.println("Failed To Load Image " + i);
             }
         }
@@ -269,9 +268,15 @@ public class GameMap extends JFrame {
     private void rollDice() {
         Random random = new Random(); // Create a new Random object
         diceRollResult = random.nextInt(6) + 1; // Generate a random value between 1 and 6 (inclusive)
-        diceLabel.setIcon(diceImages.get(diceRollResult));
-        //JOptionPane.showMessageDialog(this, "You rolled: " + diceRollResult); // Display a message dialog showing the rolled value
+        ImageIcon originalIcon = diceImages.get(diceRollResult);
+        Image image = originalIcon.getImage();
+        Image newimg = image.getScaledInstance(50,50,java.awt.Image.SCALE_SMOOTH);
+        originalIcon = new ImageIcon(newimg);
+        diceLabel.setIcon(originalIcon);
+        sideMenu.revalidate();
+        sideMenu.repaint();
         diceButton.setEnabled(false);
+        System.out.println("Icon should now be set to dice number " + diceRollResult);
         this.requestFocusInWindow();
     }
 
@@ -279,6 +284,7 @@ public class GameMap extends JFrame {
         currentPlayer = (currentPlayer + 1)%players.size(); // Increment the current player index and wrap around if necessary
         diceRollResult = 0;
         diceButton.setEnabled(true);
+        diceLabel.setIcon(null);
         updateMapDisplay(); // Update the display of the game map to reflect changes
         // Update the label to reflect the current player's turn
         if (currentPlayer == 0) {
@@ -286,6 +292,8 @@ public class GameMap extends JFrame {
         } else {
             playerTurnLabel.setText("Player Two's Turn");
         }
+        sideMenu.revalidate();
+        sideMenu.repaint();
         this.requestFocusInWindow();
     }
 
