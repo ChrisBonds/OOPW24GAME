@@ -141,7 +141,6 @@ public class GameMap extends JFrame{
         JLabel playerTurnLabel = new JLabel("Player's Turn: ");
         JLabel foundTreasuresLabel = new JLabel("Found Treasures: ");
 
-
         sideMenu.add(diceButton);
         sideMenu.add(diceLabel);
         sideMenu.add(endTurnButton);
