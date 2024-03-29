@@ -41,7 +41,7 @@ class Player {
         @Override
         public int hashCode() { //override method to return hashcode based on x and y values of coordinate object
             return Objects.hash(x, y);
-        }
+        } //makes sure equal coordinates return the same hashcode 
 
 
         public int getCoordinateX() {

@@ -389,8 +389,11 @@ public class GameMap extends JFrame {
                 //if statement checking if current player has been in this position before
                 if (player.getPreviousCoordinatePairs().contains(new Player.Coordinate(i,j))) {
                     labels[i][j].setBackground(getColorForCell(currentMap[i][j])); // Set background color based on cell value
-                } else labels[i][j].setBackground(COLOR_COVERED);
-                // else make cell color grey
+                } else if(currentMap[i][j] == 4) {
+                    labels[i][j].setBackground(COLOR_WALL);
+                }else{
+                    labels[i][j].setBackground(COLOR_COVERED);
+                }
             }
         }
         labels[player.getPawnX()][player.getPawnY()].setIcon(player.getIcon());
