@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.net.URL;
 
-public class GameMap extends JFrame {
+public class GameMap extends JFrame{
 
     private ImageIcon playerIcon;
 
@@ -133,14 +133,25 @@ public class GameMap extends JFrame {
             }
         });
 
-        JLabel playerInfoLabel = new JLabel("Player Info");
-        JLabel gameStatusLabel = new JLabel("Game Status");
+        JLabel scoreLabel = new JLabel("Score: ");
+        JLabel moneyLabel = new JLabel("Money: ");
+        JLabel powerLevelLabel = new JLabel("Power Level: ");
+        JLabel elapsedTimeLabel = new JLabel("Elapsed Time: ");
+        JLabel questItemLabel = new JLabel("Quest Item: ");
+        JLabel playerTurnLabel = new JLabel("Player's Turn: ");
+        JLabel foundTreasuresLabel = new JLabel("Found Treasures: ");
+
 
         sideMenu.add(diceButton);
         sideMenu.add(diceLabel);
         sideMenu.add(endTurnButton);
-        sideMenu.add(playerInfoLabel);
-        sideMenu.add(gameStatusLabel);
+        sideMenu.add(scoreLabel);
+        sideMenu.add(moneyLabel);
+        sideMenu.add(powerLevelLabel);
+        sideMenu.add(elapsedTimeLabel);
+        sideMenu.add(questItemLabel);
+        sideMenu.add(playerTurnLabel);
+        sideMenu.add(foundTreasuresLabel);
         getContentPane().add(sideMenu, BorderLayout.EAST);
         getContentPane().add(panel, BorderLayout.CENTER);
 
@@ -357,7 +368,7 @@ public class GameMap extends JFrame {
         }
 
         // Place walls
-        int wallCount = random.nextInt(2) + 3; // Randomly choose wall count between 2 and 7
+        int wallCount = random.nextInt(6) + 2; // Randomly choose wall count between 2 and 7
         for (int i = 0; i < wallCount; i++) {
             int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
             int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
