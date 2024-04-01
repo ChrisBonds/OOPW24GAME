@@ -8,9 +8,9 @@ class Player {
     public int pawnX;
     public int pawnY;
     private ImageIcon icon;
-    private ArrayList<Weapon> heldWeapons;
     private Wallet wallet;
     private ArrayList<Coordinate> previousCoordinatePairs;
+    private ArrayList<Item> heldItems;
 
 
     public Player(String name, int startX, int startY, ImageIcon icon) {
@@ -19,7 +19,7 @@ class Player {
         this.pawnY = startY;
         this.icon = icon;
         this.wallet = new Wallet(); // Initialize the wallet
-        this.heldWeapons = new ArrayList<>();
+        this.heldItems = new ArrayList<>();
         this.previousCoordinatePairs = new ArrayList<Coordinate>();
     }
     //coordinate class to store coordinates as single object
@@ -91,5 +91,13 @@ class Player {
     }
 
     public Wallet getWallet() {return wallet;}
+
+    public ArrayList<Item> getHeldItems() {
+        return heldItems;
+    }
+
+    public void setHeldItems(ArrayList<Item> heldItems) {
+        this.heldItems = heldItems;
+    }
     // Getters and setters for player's name and pawn position
 }

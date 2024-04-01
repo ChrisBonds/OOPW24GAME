@@ -21,6 +21,8 @@ public class GameMap extends JFrame{
 
     private ImageIcon playerIcon;
 
+    private ArrayList<House> houses; // create house objects to store in 1 array
+
     private static final int MAP_SIZE = 12; // The size of the game map (number of cells per row/column)
     private static final int SIZE = 10; // The size of each individual cell in pixels
     private static final int CELL_SIZE = 50; // The size of the cells on the map
@@ -253,6 +255,7 @@ public class GameMap extends JFrame{
             return false;
         }
         return true;
+        //need some sort of condition here to check for when player enters house that has already been looted. needs to return false so user cant enter
     }
 
     private List<Player> createPlayers() {
