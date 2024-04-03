@@ -5,7 +5,7 @@ import java.util.Random;
 public class Item {
     private String name;
 
-    Item(String name){
+    Item(String name) {
         this.name = name;
     }
 
@@ -16,33 +16,35 @@ public class Item {
     public void setName(String name) {
         this.name = name;
     }
-    public static int getNumItemType(ArrayList<Item> heldItems, Class<? extends Item> itemType){ // can pass in any subclass of item
+
+    public static int getNumItemType(ArrayList<Item> heldItems, Class<? extends Item> itemType) { // can pass in any subclass of item
         int instanceCount = 0;
-        for(Item item : heldItems){
-            if(itemType.isInstance(item)){
+        for (Item item : heldItems) {
+            if (itemType.isInstance(item)) {
                 instanceCount++;
             }
         }
         return instanceCount;
     }
 
-    public static void removeRandomItem(ArrayList<Item> heldItems, Class<? extends Item> itemType){
+    public static void removeRandomItem(ArrayList<Item> heldItems, Class<? extends Item> itemType) {
         int numItems = getNumItemType(heldItems, itemType); //get number of specified items
         Random random = new Random();
         int randomIndex = random.nextInt(numItems);
         int count = 0;
         for (int i = 0; i < heldItems.size(); i++) {
-            if(itemType.isInstance(heldItems.get(i))){
+            if (itemType.isInstance(heldItems.get(i))) {
                 count++;
-                if(count == randomIndex){
+                if (count == randomIndex) {
                     heldItems.remove(i);
                     break;
                 }
             }
         }
     }
+}
 
-    public static class Weapon extends Item {
+    class Weapon extends Item {
         private int price;
         private int powerLevel;
         private boolean isMainHand;
@@ -53,6 +55,7 @@ public class Item {
             this.powerLevel = powerLevel;
             this.isMainHand = false;
         }
+
         public int getPowerLevel() {
             return powerLevel;
         }
@@ -76,27 +79,28 @@ public class Item {
         public void setPrice(int price) {
             this.price = price;
         }
+    }
 
 
         //create 3 different subclasses of weapons. can add different features for different weapons later
         class Sword extends Weapon {
             public Sword(String weaponName, int price, int powerLevel) {
-                super( weaponName,price, powerLevel);
+                super(weaponName, price, powerLevel);
             }
         }
 
-         class Axe extends Weapon {
+        class Axe extends Weapon {
             public Axe(String WeaponName, int price, int powerLevel) {
                 super(WeaponName, price, powerLevel);
             }
         }
 
-         class Spear extends Weapon {
+        class Spear extends Weapon {
             public Spear(String WeaponName, int price, int powerLevel) {
                 super(WeaponName, price, powerLevel);
             }
         }
-        public class WeaponManager {
+        class WeaponManager {
             ArrayList<Weapon> allWeapons = new ArrayList<Weapon>();
             public WeaponManager() {
                 Sword basicSword = new Sword("Basic Sword", 10, 10);
@@ -117,7 +121,6 @@ public class Item {
                 return weaponManager.allWeapons.get(randomIdx);
             }
         }
-    }
 
 
     class Trinket extends Item {
@@ -172,8 +175,5 @@ public class Item {
             }
         }
     }
-
-
-}
 
 
