@@ -6,20 +6,25 @@ import java.util.Random;
 
 class Player {
     private String name;
+    private int power;
     public int pawnX;
     public int pawnY;
     private ImageIcon icon;
     private Wallet wallet;
     private ArrayList<Coordinate> previousCoordinatePairs;
+    private int score;
+    private int money;
 
 
 
-    public Player(String name, int startX, int startY, ImageIcon icon) {
+    public Player(String name, int startX, int startY, ImageIcon icon, int initialPower, int initialMoney) {
         this.name = name;
         this.pawnX = startX;
         this.pawnY = startY;
         this.icon = icon;
+        this.power = initialPower;
         this.wallet = new Wallet(); // Initialize the wallet
+        this.wallet.addMoney(initialMoney);
 
         this.previousCoordinatePairs = new ArrayList<Coordinate>();
     }
@@ -59,6 +64,27 @@ class Player {
         }
     }
 
+    public void purchaseWeapon(Weapon_Items weapon) {
+        // Check if the player has enough money in the wallet to purchase the weapon
+        if (this.wallet.getMoney() >= weapon.getCost()) {
+            // Deduct the cost of the weapon from the wallet
+            this.wallet.deductMoney(weapon.getCost());
+
+            // Increase the player's power by the weapon's power bonus
+            this.power += weapon.getPowerBonus();
+
+            // Optionally, add the weapon to the player's inventory here
+            // (This step depends on how you're managing inventory)
+
+            // Provide feedback for successful purchase
+            System.out.println(name + " has purchased a " + weapon.getType() + " for $" + weapon.getCost() + " and gained " + weapon.getPowerBonus() + " power.");
+
+        } else {
+            // Provide feedback if the player doesn't have enough money
+            System.out.println(name + " does not have enough money to purchase " + weapon.getType() + ".");
+        }
+    }
+
     public ImageIcon getIcon(){
         return icon;
     }
@@ -93,5 +119,21 @@ class Player {
 
     public Wallet getWallet() {return wallet;}
 
+    public int getScore() {
+        // Assuming score calculation is done elsewhere or simply returning a placeholder value
+        return score; // Replace this with actual score calculation logic
+    }
+
+    public int getMoney() {
+        return wallet.getMoney(); // Directly access money from the wallet
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public String getName() {
+        return name;
+    }
 
 }

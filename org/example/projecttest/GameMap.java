@@ -21,8 +21,6 @@ public class GameMap extends JFrame{
 
     private ImageIcon playerIcon;
 
-
-
     private static final int MAP_SIZE = 12; // The size of the game map (number of cells per row/column)
     private static final int SIZE = 10; // The size of each individual cell in pixels
     private static final int CELL_SIZE = 50; // The size of the cells on the map
@@ -60,6 +58,13 @@ public class GameMap extends JFrame{
     private Map<Integer, ImageIcon> diceImages = new HashMap<>();
     private JPanel sideMenu = new JPanel();
     private JLabel diceLabel = new JLabel();
+
+    JLabel scoreLabel = new JLabel("Score: 0");
+    JLabel moneyLabel = new JLabel("Money: 0");
+    JLabel powerLevelLabel = new JLabel("Power Level: 0");
+    JLabel elapsedTimeLabel = new JLabel("Elapsed Time: ");
+    JLabel questItemLabel = new JLabel("Quest Item: ");
+    JLabel foundTreasuresLabel = new JLabel("Found Treasures: ");
 
 
     public GameMap() {
@@ -135,13 +140,6 @@ public class GameMap extends JFrame{
             }
         });
 
-        JLabel scoreLabel = new JLabel("Score: ");
-        JLabel moneyLabel = new JLabel("Money: ");
-        JLabel powerLevelLabel = new JLabel("Power Level: ");
-        JLabel elapsedTimeLabel = new JLabel("Elapsed Time: ");
-        JLabel questItemLabel = new JLabel("Quest Item: ");
-        JLabel playerTurnLabel = new JLabel("Player's Turn: ");
-        JLabel foundTreasuresLabel = new JLabel("Found Treasures: ");
 
         sideMenu.add(diceButton);
         sideMenu.add(diceLabel);
@@ -155,6 +153,8 @@ public class GameMap extends JFrame{
         sideMenu.add(foundTreasuresLabel);
         getContentPane().add(sideMenu, BorderLayout.EAST);
         getContentPane().add(panel, BorderLayout.CENTER);
+
+        updatePlayerInfoDisplay();
 
         // Create a new JPanel to hold the playerTurnLabel and add it to the NORTH
         JPanel labelPanel = new JPanel(new BorderLayout());
@@ -236,6 +236,10 @@ public class GameMap extends JFrame{
                 updateMapDisplay();
                 // add method to check if the square landed on each move is a point of interest
                 // also handle uncovering here
+                if(playerMaps.get(this.currentPlayer)[x][y] == 5){
+                    new MarketWindow(currentPlayer);
+                }
+
                 if (!firstMoveOutsideBorder) {
                     firstMoveOutsideBorder = true;
                 }
@@ -264,8 +268,8 @@ public class GameMap extends JFrame{
         ImageIcon playerTwoIcon = createPlayerIcon(Color.PINK, 20, 20); // Create an icon for player two
 
         // Add player one and player two to the list of players with their icons and starting positions
-        players.add(new Player("Player 1", MAP_SIZE - 2, 0,playerOneIcon));
-        players.add(new Player("Player 2", MAP_SIZE - 2, 0,playerTwoIcon));
+        players.add(new Player("Player 1", MAP_SIZE - 2, 0,playerOneIcon, 5, 100));
+        players.add(new Player("Player 2", MAP_SIZE - 2, 0,playerTwoIcon,4, 100));
         return players;
     }
     private ImageIcon createPlayerIcon(Color color, int width, int height){
@@ -299,6 +303,7 @@ public class GameMap extends JFrame{
         diceButton.setEnabled(true);
         diceLabel.setIcon(null);
         updateMapDisplay(); // Update the display of the game map to reflect changes
+        updatePlayerInfoDisplay();
         // Update the label to reflect the current player's turn
         if (currentPlayer == 0) {
             playerTurnLabel.setText("Player One's Turn");
@@ -319,7 +324,7 @@ public class GameMap extends JFrame{
             map[0][i] = map[MAP_SIZE - 1][i] = map[i][0] = map[i][MAP_SIZE - 1] = 1; // assigning to 1 = enum for light grey?
         }
 
-        // Place castle in the center of the map
+        // Place wall in the center of the map
         map[SIZE / 2][SIZE / 2] = 2; //Assigning 2 to represent the castle cell
 
 
@@ -489,6 +494,37 @@ public class GameMap extends JFrame{
         // Check if the absolute difference between the position and the center of the map is less than or equal to 1 in both x and y directions
         return (Math.abs(x - SIZE / 2) <= 1 && Math.abs(y - SIZE / 2) <= 1);
     }
+
+    private void updatePlayerInfoDisplay() {
+        Player currentPlayer = players.get(this.currentPlayer);
+        Player otherPlayer = players.get((this.currentPlayer + 1) % players.size()); // Assuming 2 players for simplicity
+
+        // Assuming methods or logic to calculate or retrieve these values:
+        // These could be attributes or methods within your GameMap or related classes.
+        String elapsedTime = "00:10"; // Placeholder - Replace with actual elapsed time logic
+        String questItem = "Golden Crown"; // Placeholder - Replace with actual quest item logic
+        int foundTreasures = 3; // Placeholder - Replace with actual found treasures logic
+
+        // Update current player information
+        scoreLabel.setText("Score: " + currentPlayer.getScore());
+        moneyLabel.setText("Money: $" + currentPlayer.getMoney());
+        powerLevelLabel.setText("Power Level: " + currentPlayer.getPower());
+
+        // Update game and other player information
+        elapsedTimeLabel.setText("Elapsed Time: " + elapsedTime);
+        questItemLabel.setText("Quest Item: " + questItem);
+        playerTurnLabel.setText("Player's Turn: " + currentPlayer.getName());
+        foundTreasuresLabel.setText("Found Treasures: " + foundTreasures);
+
+        // You may want to display other player's status as well. Example:
+        // This could be shown in a separate panel or dialog.
+        String otherPlayerInfo = String.format("Other Player - Name: %s, Score: %d, Money: $%d, Power: %d",
+                otherPlayer.getName(), otherPlayer.getScore(), otherPlayer.getMoney(), otherPlayer.getPower());
+        // For simplicity, let's just print it to the console. You might want to display it in the UI.
+        System.out.println(otherPlayerInfo);
+    }
+
+
 
     private Color getColorForCell(int value) {
         switch (value) {
