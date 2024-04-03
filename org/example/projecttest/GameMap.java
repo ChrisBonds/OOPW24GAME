@@ -278,7 +278,7 @@ public class GameMap extends JFrame{
         return new ImageIcon(image); // Return the ImageIcon representing the player icon
     }
     // Method to simulate rolling a die and display the result
-    private void rollDice() {
+    public void rollDice() {
         Random random = new Random(); // Create a new Random object
         diceRollResult = random.nextInt(6) + 1; // Generate a random value between 1 and 6 (inclusive)
         ImageIcon originalIcon = diceImages.get(diceRollResult);

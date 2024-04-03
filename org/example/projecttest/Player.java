@@ -2,6 +2,7 @@ package org.example.projecttest;
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 class Player {
     private String name;
