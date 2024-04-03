@@ -21,7 +21,7 @@ public class GameMap extends JFrame{
 
     private ImageIcon playerIcon;
 
-    private ArrayList<House> houses; // create house objects to store in 1 array
+
 
     private static final int MAP_SIZE = 12; // The size of the game map (number of cells per row/column)
     private static final int SIZE = 10; // The size of each individual cell in pixels
