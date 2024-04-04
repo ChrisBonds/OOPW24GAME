@@ -347,12 +347,15 @@ public class GameMap extends JFrame{
 
 
     private boolean isValidMove(int x, int y, boolean firstMoveOutsideBorder){
+        // Check if the target position is outside the map boundaries
         if (x < 0 || x >= MAP_SIZE || y < 0 || y >= MAP_SIZE) {
             return false;
         }
+        // Check if the target position is at the border after the first move outside the border
         if (firstMoveOutsideBorder && (x == 0 || y == 0 || x == MAP_SIZE - 1 || y == MAP_SIZE - 1)) {
             return false;
         }
+        // Check if the target position contains a wall
         if (playerMaps.get(currentPlayer)[x][y] == 4) { // Check if the target square is a wall (4 represents a wall)
             return false;
         }
@@ -387,21 +390,28 @@ public class GameMap extends JFrame{
         Image image = originalIcon.getImage();
         Image newimg = image.getScaledInstance(50,50,java.awt.Image.SCALE_SMOOTH);
         originalIcon = new ImageIcon(newimg);
-        diceLabel.setIcon(originalIcon);
+        diceLabel.setIcon(originalIcon); // Set the scaled image icon to the dice label
+
+        // Revalidate and repaint the side menu to reflect the new dice image
         sideMenu.revalidate();
         sideMenu.repaint();
+
+        // Disable the dice button after rolling
         diceButton.setEnabled(false);
         System.out.println("Icon should now be set to dice number " + diceRollResult);
-        this.requestFocusInWindow();
+
+        this.requestFocusInWindow(); // Request focus to the current window
     }
 
     private void playerSwitch(){
         currentPlayer = (currentPlayer + 1)%players.size(); // Increment the current player index and wrap around if necessary
         diceRollResult = 0;
-        diceButton.setEnabled(true);
-        diceLabel.setIcon(null);
+        diceButton.setEnabled(true); // Enable the dice button for the next player's turn
+        diceLabel.setIcon(null); // Clear the dice label icon
         updateMapDisplay(); // Update the display of the game map to reflect changes
-        updatePlayerInfoDisplay();
+        updatePlayerInfoDisplay(); // Update the display of player information
+        // Update the label to reflect the current player's turn
+
         // Update the label to reflect the current player's turn
         if (currentPlayer == 0) {
             playerTurnLabel.setText("Player One's Turn");
@@ -614,11 +624,10 @@ public class GameMap extends JFrame{
         playerTurnLabel.setText("Player's Turn: " + currentPlayer.getName());
         foundTreasuresLabel.setText("Found Treasures: " + foundTreasures);
 
-        // You may want to display other player's status as well. Example:
-        // This could be shown in a separate panel or dialog.
+
         String otherPlayerInfo = String.format("Other Player - Name: %s, Score: %d, Money: $%d, Power: %d",
                 otherPlayer.getName(), otherPlayer.getScore(), otherPlayer.getMoney(), otherPlayer.getPower());
-        // For simplicity, let's just print it to the console. You might want to display it in the UI.
+        //Display to the terminal for simplicity
         System.out.println(otherPlayerInfo);
     }
 
