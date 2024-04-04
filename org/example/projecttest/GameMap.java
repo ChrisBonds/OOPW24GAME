@@ -192,15 +192,20 @@ public class GameMap extends JFrame{
         this.setFocusable(true);
 
     }
-
+//Loads dice images from the resources folder and stores them in a map
     private void loadDiceImages(){
         for(int i = 1; i <= 6; i++) {
+            // Construct the path for the current dice image
             String path = "DiceImages/" + i + ".png";
+            // Attempt to locate the image resource using the path
             URL url = GameMap.class.getResource(path);
+            // Check if the resource was found;
             if (url != null) {
                 ImageIcon icon = new ImageIcon(url);
+                // Store the ImageIcon in a map with the corresponding dice number as the key
                 diceImages.put(i, icon);
             } else {
+                // If the resource wasn't found, print an error message
                 System.err.println("Failed To Load Image " + i);
             }
         }
@@ -209,10 +214,12 @@ public class GameMap extends JFrame{
 
     private void handlePlayerMovement(KeyEvent e) {
         if (diceRollResult > 0) {
-            Player currentPlayer = players.get(this.currentPlayer);
+            Player currentPlayer = players.get(this.currentPlayer); // Get the current player
+            // Get the current position of the player's pawn
             int x = currentPlayer.getPawnX();
             int y = currentPlayer.getPawnY();
 
+            // Determine the direction of movement based on the key pressed
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:
                     x--;
@@ -233,14 +240,15 @@ public class GameMap extends JFrame{
             }
 
             if (isValidMove(x, y, firstMoveOutsideBorder)) {
-                int cellValue = playerMaps.get(this.currentPlayer)[x][y];
+                // Retrieve the value of the cell the player is moving onto
+                int cellValue = playerMaps.get(this.currentPlayer)[x][y]; // Update the player's pawn position
                 currentPlayer.setPawnX(x);
                 currentPlayer.setPawnY(y);
+                // Add the new position to the player's coordinates history
                 currentPlayer.addCoordinatePair(new Player.Coordinate(x, y));
                 diceRollResult--; // Decrease the remaining dice roll count
                 updateMapDisplay();
-                // add method to check if the square landed on each move is a point of interest
-                // also handle uncovering here
+                // Check if the landed square is a point of interest and handle uncovering
                 if(playerMaps.get(this.currentPlayer)[x][y] == 5){
                     new MarketWindow(currentPlayer);
                 }
@@ -254,14 +262,16 @@ public class GameMap extends JFrame{
                 if (!firstMoveOutsideBorder) {
                     firstMoveOutsideBorder = true;
                 }
-
+                // Check for potential battles with other players
                 checkForBattle(currentPlayer, x, y);
             }
         }
     }
 
     private void checkForBattle(Player currentPlayer, int x, int y) {
+        // Iterate through all players to find potential opponents
         for (Player otherPlayer : players) {
+            // Check if the other player is not the current player and occupies the target position
             if (otherPlayer != currentPlayer && otherPlayer.getPawnX() == x && otherPlayer.getPawnY() == y) {
                 // Determine the winner based on power level, or move count if powers are equal
                 Player winner, loser;
@@ -282,8 +292,11 @@ public class GameMap extends JFrame{
     }
 
     private void handleBattleOutcome(Player winner, Player loser) {
+        // Calculate the total power of both players
         double totalPower = winner.getPower() + loser.getPower(); // ∑Power_i
+        // Calculate the amount of money to transfer from the loser to the winner
         double moneyTransfer = ((winner.getPower() - loser.getPower()) / totalPower) * loser.getMoney(); // Money_a
+        // Ensure the money transfer amount is positive
         moneyTransfer = Math.abs(moneyTransfer); // Make sure it's positive
 
         // Since the Wallet class methods expect integers, we round the money transfer amount.
@@ -308,10 +321,12 @@ public class GameMap extends JFrame{
 
 
     private void interactWithLostObject(Player player, int x, int y){
+        // Generate a random amount of money gained between 25 and 100 (inclusive)
         Random random = new Random();
         int moneyGained = 25+random.nextInt(76);
-        player.getWallet().addMoney(moneyGained);
-        updatePlayerInfoDisplay();
+        player.getWallet().addMoney(moneyGained); // Add the money gained to the player's wallet
+        updatePlayerInfoDisplay(); // Update the player's information display
+        // Mark the lost object as interacted with on all player maps
         for(int [][]map : playerMaps){
             map[x][y] = 8;
         }
