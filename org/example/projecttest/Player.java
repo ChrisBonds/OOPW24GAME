@@ -1,6 +1,7 @@
 package org.example.projecttest;
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -12,9 +13,28 @@ class Player {
     private ImageIcon icon;
     private Wallet wallet;
     private ArrayList<Coordinate> previousCoordinatePairs;
+    private List<Treasure> heldTreasures = new ArrayList<>();
     private int score;
     private int money;
 
+    public void addHeldTreasure(Treasure treasure){
+        heldTreasures.add(treasure);
+        System.out.println("Held for verification: " + treasure.getName());
+    }
+
+    public void verifyTreasures(Castle castle) {
+        // Check if player is at the same location as the castle
+        if (this.pawnX == castle.getX() && this.pawnY == castle.getY()) {
+            for (Treasure treasure : heldTreasures) {
+                System.out.println("Verified: " + treasure.getName());
+                this.score++; // Increase the score for each verified treasure
+                this.wallet.addMoney(treasure.getValue()); // Add treasure's value to the player's wallet
+            }
+            heldTreasures.clear(); // Clear the treasures list after verification
+        } else {
+            System.out.println("You must reach the Castle to verify treasures.");
+        }
+    }
 
 
     public Player(String name, int startX, int startY, ImageIcon icon, int initialPower, int initialMoney) {
@@ -25,9 +45,11 @@ class Player {
         this.power = initialPower;
         this.wallet = new Wallet(); // Initialize the wallet
         this.wallet.addMoney(initialMoney);
-
+        this.money = 0;
         this.previousCoordinatePairs = new ArrayList<Coordinate>();
     }
+
+
     //coordinate class to store coordinates as single object
     static class Coordinate{
         private int x;
@@ -47,7 +69,7 @@ class Player {
         @Override
         public int hashCode() { //override method to return hashcode based on x and y values of coordinate object
             return Objects.hash(x, y);
-        } //makes sure equal coordinates return the same hashcode 
+        } //makes sure equal coordinates return the same hashcode
 
 
         public int getCoordinateX() {

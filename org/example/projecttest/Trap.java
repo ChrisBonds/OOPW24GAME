@@ -6,7 +6,7 @@ public class Trap extends Building{
     }
 
     @Override
-    void interact(Player player) {
+    public void interact(Player player, int x, int y) {
         // Logic for losing a small amount of assets (power or wealth)
     }
 }

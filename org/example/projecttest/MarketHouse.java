@@ -13,7 +13,7 @@ public class MarketHouse extends Building {
     }
 
     @Override
-    void interact(Player player) {
+    public void interact(Player player, int x, int y) {
         // Logic for interacting with the market, such as purchasing items or revealing treasure locations
     }
 

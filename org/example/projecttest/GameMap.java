@@ -229,6 +229,7 @@ public class GameMap extends JFrame{
             }
 
             if (isValidMove(x, y, firstMoveOutsideBorder)) {
+                int cellValue = playerMaps.get(this.currentPlayer)[x][y];
                 currentPlayer.setPawnX(x);
                 currentPlayer.setPawnY(y);
                 currentPlayer.addCoordinatePair(new Player.Coordinate(x, y));
@@ -239,12 +240,41 @@ public class GameMap extends JFrame{
                 if(playerMaps.get(this.currentPlayer)[x][y] == 5){
                     new MarketWindow(currentPlayer);
                 }
+                if(cellValue == 6){
+                    interactWithLostObject(currentPlayer, x, y);
+                }
+                if(cellValue == 7){
+                    interactWithTrap(currentPlayer,x,y);
+                }
 
                 if (!firstMoveOutsideBorder) {
                     firstMoveOutsideBorder = true;
                 }
             }
         }
+    }
+
+    private void interactWithLostObject(Player player, int x, int y){
+        Random random = new Random();
+        int moneyGained = 25+random.nextInt(76);
+        player.getWallet().addMoney(moneyGained);
+        updatePlayerInfoDisplay();
+        for(int [][]map : playerMaps){
+            map[x][y] = 8;
+        }
+    }
+    private void interactWithTrap(Player player, int x, int y){
+        int deduction = (int) (player.getWallet().getMoney()*0.1);
+
+        // Deduct the calculated amount from the player's wallet
+        player.getWallet().deductMoney(deduction);
+
+        // Inform the player about the money lost
+        System.out.println(player.getName() + " has lost $" + deduction + " after stepping on a trap!");
+
+        // Refresh the display and info to reflect changes
+        updateMapDisplay();
+        updatePlayerInfoDisplay();
     }
 
 
