@@ -268,11 +268,11 @@ public class GameMap extends JFrame{
                 if (currentPlayer.getPower() > otherPlayer.getPower() ||
                         (currentPlayer.getPower() == otherPlayer.getPower() &&
                                 currentPlayer.getMoveCount() > otherPlayer.getMoveCount())) {
-                    winner = otherPlayer;
-                    loser = currentPlayer;
-                } else {
                     winner = currentPlayer;
                     loser = otherPlayer;
+                } else {
+                    winner = otherPlayer;
+                    loser = currentPlayer;
                 }
                 // Execute the outcome of the battle
                 handleBattleOutcome(winner, loser);
@@ -283,7 +283,7 @@ public class GameMap extends JFrame{
 
     private void handleBattleOutcome(Player winner, Player loser) {
         double totalPower = winner.getPower() + loser.getPower(); // ∑Power_i
-        double moneyTransfer = (winner.getPower() - loser.getPower()) / totalPower * loser.getMoney(); // Money_a
+        double moneyTransfer = ((winner.getPower() - loser.getPower()) / totalPower) * loser.getMoney(); // Money_a
         moneyTransfer = Math.abs(moneyTransfer); // Make sure it's positive
 
         // Since the Wallet class methods expect integers, we round the money transfer amount.
@@ -448,7 +448,7 @@ public class GameMap extends JFrame{
         }
 
         // Place traps
-        int trapCount = random.nextInt(2) + 3; // Randomly choose trap count between 2 and 7
+        int trapCount = random.nextInt(7) + 3; // Randomly choose trap count between 3 and 7
         for (int i = 0; i < trapCount; i++) {
             int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
             int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
@@ -458,7 +458,7 @@ public class GameMap extends JFrame{
         }
 
         // Place walls
-        int wallCount = random.nextInt(6) + 2; // Randomly choose wall count between 2 and 7
+        int wallCount = random.nextInt(6) + 2; // Randomly choose wall count between 2 and 6
         for (int i = 0; i < wallCount; i++) {
             int x = random.nextInt(MAP_SIZE); // Generate a random x-coordinate within the map boundaries
             int y = random.nextInt(MAP_SIZE); // Generate a random y-coordinate within the map boundaries
