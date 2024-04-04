@@ -16,7 +16,8 @@ import java.awt.event.KeyAdapter;
 import java.util.HashMap;
 import java.util.Map;
 import java.net.URL;
-
+import java.time.Duration;
+import java.time.Instant;
 public class GameMap extends JFrame{
 
     private ImageIcon playerIcon;
@@ -59,6 +60,7 @@ public class GameMap extends JFrame{
     private JPanel sideMenu = new JPanel();
     private JLabel diceLabel = new JLabel();
 
+    private Instant startTime;
     JLabel scoreLabel = new JLabel("Score: 0");
     JLabel moneyLabel = new JLabel("Money: 0");
     JLabel powerLevelLabel = new JLabel("Power Level: 0");
@@ -71,6 +73,8 @@ public class GameMap extends JFrame{
         loadDiceImages();
         diceLabel = new JLabel();
 
+        startTime = Instant.now();
+        updateElapsedTimeDisplay();
         setTitle("Game Map"); // Set the title of the game map window
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set the default close operation for the game map window
         setResizable(true); // Allow the game map window to be resizable
@@ -580,9 +584,9 @@ public class GameMap extends JFrame{
 
         // Assuming methods or logic to calculate or retrieve these values:
         // These could be attributes or methods within your GameMap or related classes.
-        String elapsedTime = "00:10"; // Placeholder - Replace with actual elapsed time logic
+        String elapsedTime = "00:00"; // Placeholder - Replace with actual elapsed time logic
         String questItem = "Golden Crown"; // Placeholder - Replace with actual quest item logic
-        int foundTreasures = 3; // Placeholder - Replace with actual found treasures logic
+        int foundTreasures = 0; // Placeholder - Replace with actual found treasures logic
 
         // Update current player information
         scoreLabel.setText("Score: " + currentPlayer.getScore());
@@ -618,16 +622,24 @@ public class GameMap extends JFrame{
             default: return Color.WHITE; //default colour
         }
     }
+    private void updateElapsedTimeDisplay() {
+        Instant now = Instant.now();
+        Duration duration = Duration.between(startTime, now);
 
+        long minutes = duration.toMinutes();
+        long seconds = duration.minusMinutes(minutes).getSeconds();
+        String elapsedTimeStr = String.format("%02d:%02d", minutes, seconds);
+        elapsedTimeLabel.setText("Elapsed Time: " + elapsedTimeStr);
+
+        // Schedule the update every second
+        Timer timer = new Timer(1000, e -> updateElapsedTimeDisplay());
+        timer.setRepeats(false);
+        timer.start();
+    }
 
     public static void main(String[] args) {
-
-        new GameMap(); //lol
+        SwingUtilities.invokeLater(() -> {
+            new GameMap();
+        });
     }
 }
-// Assuming currentPlayer is the current player index
-//Player currentPlayer = players.get(currentPlayer);
-//currentPlayer.getWallet().addMoney(100); // Add 100 money to the current player's wallet
-// Assuming currentPlayer is the current player index
-//Player currentPlayer = players.get(currentPlayer);
-//currentPlayer.getWallet().deductMoney(50); // Deduct 50 money from the current player's wallet
