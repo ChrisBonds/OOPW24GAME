@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Random;
 
 class Player {
+    private int moveCount = 0;
     private String name;
     private int power;
     public int pawnX;
@@ -86,6 +87,13 @@ class Player {
         }
     }
 
+    public int getMoveCount() {
+        return moveCount;
+    }
+    public void incrementMoveCount(){
+        moveCount++;
+    }
+
     public void purchaseWeapon(Weapon_Items weapon) {
         // Check if the player has enough money in the wallet to purchase the weapon
         if (this.wallet.getMoney() >= weapon.getCost()) {
@@ -156,6 +164,12 @@ class Player {
 
     public String getName() {
         return name;
+    }
+    public void move(int x, int y) {
+        setPawnX(x);
+        setPawnY(y);
+        addCoordinatePair(new Player.Coordinate(x, y));
+        incrementMoveCount(); // Increment the move count each time the player moves
     }
 
 }

@@ -250,9 +250,58 @@ public class GameMap extends JFrame{
                 if (!firstMoveOutsideBorder) {
                     firstMoveOutsideBorder = true;
                 }
+
+                checkForBattle(currentPlayer, x, y);
             }
         }
     }
+
+    private void checkForBattle(Player currentPlayer, int x, int y) {
+        for (Player otherPlayer : players) {
+            if (otherPlayer != currentPlayer && otherPlayer.getPawnX() == x && otherPlayer.getPawnY() == y) {
+                // Determine the winner based on power level, or move count if powers are equal
+                Player winner, loser;
+                if (currentPlayer.getPower() > otherPlayer.getPower() ||
+                        (currentPlayer.getPower() == otherPlayer.getPower() &&
+                                currentPlayer.getMoveCount() > otherPlayer.getMoveCount())) {
+                    winner = otherPlayer;
+                    loser = currentPlayer;
+                } else {
+                    winner = currentPlayer;
+                    loser = otherPlayer;
+                }
+                // Execute the outcome of the battle
+                handleBattleOutcome(winner, loser);
+                break; // Assuming only one battle can be initiated per move
+            }
+        }
+    }
+
+    private void handleBattleOutcome(Player winner, Player loser) {
+        double totalPower = winner.getPower() + loser.getPower(); // ∑Power_i
+        double moneyTransfer = (winner.getPower() - loser.getPower()) / totalPower * loser.getMoney(); // Money_a
+        moneyTransfer = Math.abs(moneyTransfer); // Make sure it's positive
+
+        // Since the Wallet class methods expect integers, we round the money transfer amount.
+        int moneyTransferInt = (int) Math.round(moneyTransfer);
+
+        // Transfer the money
+        loser.getWallet().deductMoney(moneyTransferInt);
+        winner.getWallet().addMoney(moneyTransferInt);
+
+        // Move the losing player back to the starting house
+        loser.setPawnX(MAP_SIZE - 2);
+        loser.setPawnY(0);
+
+        // Update the display to show the changes
+        updatePlayerInfoDisplay();
+        updateMapDisplay();
+
+        // Notify the players
+        JOptionPane.showMessageDialog(this, winner.getName() + " wins the battle and takes $" +
+                moneyTransferInt + " from " + loser.getName() + "!", "Battle Outcome", JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
     private void interactWithLostObject(Player player, int x, int y){
         Random random = new Random();
